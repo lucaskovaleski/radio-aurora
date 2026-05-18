@@ -1,0 +1,1150 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=IM+Fell+English:ital@0;1&family=Source+Sans+3:wght@300;400;600&display=swap');
+
+  :root {
+    --cream: #F5EDD8;
+    --off-white: #FAF5E9;
+    --bordeaux: #7A1C2E;
+    --gold: #C4933F;
+    --gold-light: #E8C97A;
+    --teal-50s: #2B6B6B;
+    --teal-light: #D4EAEA;
+    --navy: #1A2744;
+    --navy-light: #D6DCF0;
+    --rose: #C2536A;
+    --rose-light: #F5D8DE;
+    --rust: #8B3A2A;
+    --rust-light: #F0D9D3;
+    --charcoal: #2C2C2A;
+    --mid-gray: #888780;
+    --light-gray: #E8E4D8;
+    --text-dark: #1C1A14;
+    --text-mid: #4A4538;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body { font-family: 'Source Sans 3', sans-serif; background: var(--off-white); color: var(--text-dark); }
+
+  .page { max-width: 900px; margin: 0 auto; padding: 0 0 3rem; }
+
+  /* HEADER */
+  .header {
+    background: var(--navy);
+    color: var(--cream);
+    text-align: center;
+    padding: 2.5rem 2rem 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 28px, rgba(255,255,255,0.03) 28px, rgba(255,255,255,0.03) 29px);
+  }
+  .radio-waves {
+    display: flex; justify-content: center; gap: 6px; margin-bottom: 1.2rem;
+  }
+  .wave {
+    width: 3px; background: var(--gold); border-radius: 2px;
+    animation: wave 1.4s ease-in-out infinite;
+  }
+  .wave:nth-child(1){ height: 14px; animation-delay: 0s; }
+  .wave:nth-child(2){ height: 22px; animation-delay: 0.1s; }
+  .wave:nth-child(3){ height: 30px; animation-delay: 0.2s; }
+  .wave:nth-child(4){ height: 38px; animation-delay: 0.3s; }
+  .wave:nth-child(5){ height: 30px; animation-delay: 0.4s; }
+  .wave:nth-child(6){ height: 22px; animation-delay: 0.5s; }
+  .wave:nth-child(7){ height: 14px; animation-delay: 0.6s; }
+  @keyframes wave {
+    0%,100%{ transform: scaleY(0.6); opacity: 0.5; }
+    50%{ transform: scaleY(1); opacity: 1; }
+  }
+  .header-badge {
+    display: inline-block;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--gold-light); margin-bottom: 0.5rem;
+  }
+  .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.8rem; font-weight: 700;
+    color: var(--cream); line-height: 1.1;
+    position: relative;
+  }
+  .header h1 span { color: var(--gold); font-style: italic; }
+  .header-sub {
+    font-size: 13px; color: rgba(245,237,216,0.65); margin-top: 0.6rem;
+    letter-spacing: 1px;
+  }
+  .header-decade {
+    display: inline-block;
+    background: var(--bordeaux);
+    color: var(--cream);
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem; font-weight: 700;
+    padding: 0.3rem 1.2rem; border-radius: 2px;
+    margin-top: 1rem;
+  }
+
+  /* TABS */
+  .tabs { display: flex; background: var(--navy); border-bottom: 3px solid var(--gold); overflow-x: auto; }
+  .tab {
+    flex: 1; min-width: 100px;
+    padding: 0.8rem 0.5rem;
+    background: none; border: none; cursor: pointer;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 12px; letter-spacing: 1px; text-transform: uppercase;
+    color: rgba(245,237,216,0.5);
+    border-bottom: 3px solid transparent; margin-bottom: -3px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+  .tab:hover:not(.active) { color: var(--cream); }
+
+  /* SECTIONS */
+  .section { display: none; padding: 2rem 1.5rem; }
+  .section.active { display: block; }
+
+  /* PAINEL SEMÂNTICO */
+  .panel-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin-bottom: 1.5rem; }
+  .panel-card {
+    background: white; border: 0.5px solid #D8D2C0;
+    border-radius: 4px; padding: 1.2rem;
+  }
+  .panel-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.85rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 2px;
+    color: var(--bordeaux); margin-bottom: 0.8rem;
+    border-bottom: 1px solid var(--light-gray); padding-bottom: 0.4rem;
+  }
+
+  .palette-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 0.5rem; }
+  .swatch {
+    width: 36px; height: 36px; border-radius: 3px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .swatch-label { font-size: 9px; text-align: center; margin-top: 3px; color: var(--text-mid); }
+  .swatch-item { text-align: center; }
+
+  .keyword-cloud { display: flex; flex-wrap: wrap; gap: 6px; }
+  .keyword {
+    background: var(--light-gray); color: var(--text-mid);
+    font-size: 11px; padding: 3px 10px; border-radius: 2px;
+    letter-spacing: 0.5px;
+  }
+  .keyword.highlight { background: var(--navy); color: var(--cream); }
+
+  .ref-list { list-style: none; }
+  .ref-list li {
+    font-size: 12px; color: var(--text-mid);
+    padding: 3px 0; border-bottom: 0.5px solid var(--light-gray);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .ref-list li::before { content: '◆'; color: var(--gold); font-size: 8px; }
+
+  .context-text { font-size: 13px; color: var(--text-mid); line-height: 1.7; }
+  .context-text strong { color: var(--text-dark); font-weight: 600; }
+
+  .silhouette-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .silhouette-item {
+    background: var(--cream);
+    border: 0.5px solid #D8D2C0;
+    border-radius: 3px;
+    padding: 0.6rem;
+    font-size: 11px; color: var(--text-mid);
+  }
+  .silhouette-item strong { display: block; color: var(--text-dark); font-size: 12px; margin-bottom: 2px; }
+
+  /* FICHAS DOS PERSONAGENS */
+  .char-selector { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 1.5rem; }
+  .char-btn {
+    flex: 1; min-width: 120px;
+    padding: 0.8rem 0.5rem;
+    border: 1.5px solid; border-radius: 4px;
+    background: none; cursor: pointer;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 12px; font-weight: 600; letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: all 0.2s;
+  }
+  .char-btn.celina { border-color: var(--bordeaux); color: var(--bordeaux); }
+  .char-btn.celina.active, .char-btn.celina:hover { background: var(--bordeaux); color: white; }
+  .char-btn.orlando { border-color: var(--navy); color: var(--navy); }
+  .char-btn.orlando.active, .char-btn.orlando:hover { background: var(--navy); color: white; }
+  .char-btn.nair { border-color: var(--teal-50s); color: var(--teal-50s); }
+  .char-btn.nair.active, .char-btn.nair:hover { background: var(--teal-50s); color: white; }
+  .char-btn.julio { border-color: var(--rust); color: var(--rust); }
+  .char-btn.julio.active, .char-btn.julio:hover { background: var(--rust); color: white; }
+
+  .char-panel { display: none; }
+  .char-panel.active { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+  .char-header {
+    grid-column: 1 / -1;
+    padding: 1.5rem;
+    border-radius: 4px;
+    display: flex; align-items: center; gap: 1.5rem;
+  }
+  .char-avatar {
+    width: 70px; height: 70px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem; font-weight: 700; flex-shrink: 0;
+  }
+  .char-title { flex: 1; }
+  .char-title h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem; font-weight: 700; line-height: 1.1;
+  }
+  .char-title .char-role {
+    font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
+    opacity: 0.75; margin-top: 3px;
+  }
+  .char-tag {
+    display: inline-block; font-size: 10px;
+    padding: 2px 10px; border-radius: 2px;
+    letter-spacing: 1px; text-transform: uppercase;
+    margin-top: 6px; font-weight: 600;
+  }
+
+  .ficha-card {
+    background: white; border: 0.5px solid #D8D2C0;
+    border-radius: 4px; padding: 1.2rem;
+  }
+  .ficha-card h4 {
+    font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--mid-gray); margin-bottom: 0.7rem;
+    border-bottom: 0.5px solid var(--light-gray); padding-bottom: 0.4rem;
+  }
+  .ficha-row { display: flex; justify-content: space-between; margin-bottom: 6px; align-items: flex-start; }
+  .ficha-label { font-size: 11px; color: var(--mid-gray); min-width: 90px; }
+  .ficha-value { font-size: 12px; color: var(--text-dark); text-align: right; flex: 1; }
+  .ficha-text { font-size: 12px; color: var(--text-mid); line-height: 1.6; }
+
+  .palette-char { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 8px; }
+  .swatch-char {
+    width: 28px; height: 28px; border-radius: 3px;
+    position: relative;
+  }
+  .swatch-tooltip {
+    font-size: 10px; color: var(--text-mid);
+  }
+
+  .pecas-list { list-style: none; }
+  .pecas-list li {
+    font-size: 12px; color: var(--text-mid);
+    padding: 4px 0; border-bottom: 0.5px solid var(--light-gray);
+    display: flex; gap: 6px;
+  }
+  .pecas-list li::before { content: '→'; color: var(--gold); font-size: 10px; }
+
+  .prompt-box {
+    grid-column: 1 / -1;
+    background: var(--charcoal); color: var(--cream);
+    border-radius: 4px; padding: 1.2rem;
+    font-family: 'Source Sans 3', monospace;
+    font-size: 11px; line-height: 1.7;
+  }
+  .prompt-box h4 {
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 0.6rem;
+  }
+  .prompt-box p { color: rgba(245,237,216,0.8); }
+
+  /* COMPARATIVO */
+  .comp-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 2rem; }
+  .comp-card {
+    border-radius: 4px; padding: 1.2rem;
+    text-align: center;
+  }
+  .comp-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem; font-weight: 700; margin-bottom: 4px;
+  }
+  .comp-card .comp-role { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.7; margin-bottom: 0.8rem; }
+  .comp-palette { display: flex; justify-content: center; gap: 4px; margin: 0.6rem 0; }
+  .comp-sw { width: 20px; height: 20px; border-radius: 2px; }
+  .comp-desc { font-size: 11px; line-height: 1.5; }
+  .comp-vs-label {
+    grid-column: 1 / -1;
+    text-align: center;
+    font-size: 11px; color: var(--mid-gray); letter-spacing: 2px;
+    text-transform: uppercase; margin: 0.5rem 0;
+  }
+  .comp-diff-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .comp-diff-table th {
+    background: var(--navy); color: var(--cream);
+    padding: 8px 12px; text-align: left; font-size: 11px;
+    letter-spacing: 1px; text-transform: uppercase; font-weight: 600;
+  }
+  .comp-diff-table td {
+    padding: 8px 12px; border-bottom: 0.5px solid var(--light-gray);
+    vertical-align: top; color: var(--text-mid);
+  }
+  .comp-diff-table tr:hover td { background: var(--off-white); }
+  .comp-diff-table td:first-child { font-weight: 600; color: var(--text-dark); min-width: 100px; }
+
+  /* PRODUÇÃO */
+  .prod-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .prod-char-card {
+    border: 0.5px solid #D8D2C0; border-radius: 4px; overflow: hidden;
+  }
+  .prod-char-header {
+    padding: 0.8rem 1rem;
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem; font-weight: 700;
+  }
+  .prod-body { padding: 1rem; }
+  .prod-category { margin-bottom: 0.8rem; }
+  .prod-cat-label {
+    font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--mid-gray); margin-bottom: 4px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .prod-badge {
+    display: inline-block; font-size: 10px; padding: 1px 8px; border-radius: 2px;
+    font-weight: 600; letter-spacing: 0.5px;
+  }
+  .prod-badge.brechó { background: #EAF3DE; color: #3B6D11; }
+  .prod-badge.acervo { background: #E6F1FB; color: #185FA5; }
+  .prod-badge.aluguel { background: #FAEEDA; color: #854F0B; }
+  .prod-badge.adapt { background: #FAECE7; color: #993C1D; }
+  .prod-items { font-size: 12px; color: var(--text-mid); padding-left: 12px; }
+
+  /* FONTES */
+  .refs-section { }
+  .refs-category { margin-bottom: 1.5rem; }
+  .refs-category h3 {
+    font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--bordeaux); border-left: 3px solid var(--bordeaux);
+    padding-left: 10px; margin-bottom: 0.8rem;
+  }
+  .refs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .ref-item {
+    background: white; border: 0.5px solid #D8D2C0;
+    border-radius: 3px; padding: 0.6rem 0.8rem;
+    font-size: 12px; color: var(--text-mid);
+  }
+  .ref-item strong { display: block; color: var(--text-dark); font-size: 12px; }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem; font-weight: 700;
+    color: var(--navy); margin-bottom: 0.3rem;
+  }
+  .section-subtitle {
+    font-size: 12px; color: var(--mid-gray); letter-spacing: 1px;
+    text-transform: uppercase; margin-bottom: 1.5rem;
+  }
+
+  /* IA CRÍTICA */
+  .ia-box {
+    background: #FFF9ED; border: 1px solid var(--gold-light);
+    border-radius: 4px; padding: 1rem;
+    font-size: 12px; color: var(--text-mid); line-height: 1.6;
+  }
+  .ia-box strong { color: var(--rust); }
+</style>
+
+<div class="page">
+
+  <div class="header">
+    <div class="radio-waves">
+      <div class="wave"></div><div class="wave"></div><div class="wave"></div>
+      <div class="wave"></div><div class="wave"></div><div class="wave"></div>
+      <div class="wave"></div>
+    </div>
+    <div class="header-badge">Projeto de Figurinismo · Produção Audiovisual</div>
+    <h1>Rádio <span>Aurora</span></h1>
+    <div class="header-sub">O Último Programa · Roteiro 3</div>
+    <div class="header-decade">Brasil · Anos 1950</div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('painel')">Painel Semântico</button>
+    <button class="tab" onclick="showTab('personagens')">Personagens</button>
+    <button class="tab" onclick="showTab('comparativo')">Comparativo</button>
+    <button class="tab" onclick="showTab('producao')">Produção</button>
+    <button class="tab" onclick="showTab('fontes')">Fontes</button>
+  </div>
+
+  <!-- ===== PAINEL SEMÂNTICO ===== -->
+  <div id="tab-painel" class="section active">
+    <div class="section-title">Painel semântico geral</div>
+    <div class="section-subtitle">Rádio Aurora · Brasil dos anos 1950 · Contexto histórico e estético</div>
+
+    <div class="panel-grid">
+
+      <div class="panel-card" style="grid-column: 1 / -1;">
+        <h3>Contexto histórico — Brasil nos anos 1950</h3>
+        <div class="context-text">
+          O Brasil dos anos 1950 vive uma <strong>euforia modernizante</strong>: o governo Dutra cede ao getulismo, Vargas retorna em 1951 e JK inaugura Brasília em 1960. O rádio é o principal veículo de comunicação de massa — programas de auditório como os da Rádio Nacional do Rio de Janeiro reúnem multidões. Cantoras como <strong>Marlene, Emilinha Borba e Dolores Duran</strong> são verdadeiras estrelas nacionais. Ao mesmo tempo, o cinema norte-americano e o samba-canção moldam o imaginário urbano. Nas cidades — especialmente Rio e São Paulo — a moda feminina segue o <strong>New Look de Dior</strong>, adaptado ao clima tropical e ao orçamento brasileiro: cintura marcada, saia midi ou longa, luvas e chapéu nas ocasiões sociais. O vestuário masculino aposta no terno de dois botões, gravata fina e chapéu de feltro ou palha. A juventude urbana começa a absorver influências norte-americanas via filmes e revistas como <strong>O Cruzeiro e Manchete</strong>.
+        </div>
+      </div>
+
+      <div class="panel-card">
+        <h3>Paleta de cores do roteiro</h3>
+        <div style="margin-bottom: 8px;">
+          <div style="font-size: 11px; color: var(--mid-gray); margin-bottom: 5px;">Cores dominantes</div>
+          <div class="palette-row">
+            <div class="swatch-item">
+              <div class="swatch" style="background:#1A2744;"></div>
+              <div class="swatch-label">Azul marinho</div>
+            </div>
+            <div class="swatch-item">
+              <div class="swatch" style="background:#7A1C2E;"></div>
+              <div class="swatch-label">Bordô</div>
+            </div>
+            <div class="swatch-item">
+              <div class="swatch" style="background:#2B6B6B;"></div>
+              <div class="swatch-label">Verde esmeralda</div>
+            </div>
+            <div class="swatch-item">
+              <div class="swatch" style="background:#C4933F;"></div>
+              <div class="swatch-label">Dourado</div>
+            </div>
+            <div class="swatch-item">
+              <div class="swatch" style="background:#4A3728;"></div>
+              <div class="swatch-label">Marrom escuro</div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div style="font-size: 11px; color: var(--mid-gray); margin-bottom: 5px;">Cores de apoio</div>
+          <div class="palette-row">
+            <div class="swatch-item">
+              <div class="swatch" style="background:#F5EDD8;"></div>
+              <div class="swatch-label">Marfim</div>
+            </div>
+            <div class="swatch-item">
+              <div class="swatch" style="background:#C2536A;"></div>
+              <div class="swatch-label">Rosa antigo</div>
+            </div>
+            <div class="swatch-item">
+              <div class="swatch" style="background:#8B3A2A;"></div>
+              <div class="swatch-label">Ferrugem</div>
+            </div>
+            <div class="swatch-item">
+              <div class="swatch" style="background:#D4C5A9;"></div>
+              <div class="swatch-label">Bege caqui</div>
+            </div>
+            <div class="swatch-item">
+              <div class="swatch" style="background:#2C2C2A;"></div>
+              <div class="swatch-label">Carvão</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-card">
+        <h3>Palavras-chave do universo visual</h3>
+        <div class="keyword-cloud">
+          <span class="keyword highlight">Glamour de auditório</span>
+          <span class="keyword highlight">Fim de uma era</span>
+          <span class="keyword">Nostalgia</span>
+          <span class="keyword">Tensão contida</span>
+          <span class="keyword">Modernização</span>
+          <span class="keyword">Rádio Nacional</span>
+          <span class="keyword">Samba-canção</span>
+          <span class="keyword">New Look tropical</span>
+          <span class="keyword">Luzes de estúdio</span>
+          <span class="keyword">Hierarquia silenciosa</span>
+          <span class="keyword">Vaidade masculina</span>
+          <span class="keyword">Invisibilidade técnica</span>
+          <span class="keyword">Juventude ansiosa</span>
+          <span class="keyword">Encerramento</span>
+          <span class="keyword">Brilho e sombra</span>
+        </div>
+      </div>
+
+      <div class="panel-card">
+        <h3>Silhuetas e modelagens femininas</h3>
+        <div class="silhouette-grid">
+          <div class="silhouette-item"><strong>Vestido de auditório</strong> Saia rodada midi, cintura de vespa, corpete estruturado. Tule e organza.</div>
+          <div class="silhouette-item"><strong>Conjunto saia + blusa</strong> Saia lápis ou evasê, blusa de gola rendada. Uso cotidiano elegante.</div>
+          <div class="silhouette-item"><strong>Luvas curtas</strong> Até o pulso, tecido de algodão ou renda. Obrigatórias em eventos.</div>
+          <div class="silhouette-item"><strong>Sapato bico fino</strong> Scarpin com salto grosso ou stiletto baixo. Cores neutras ou vibrantes.</div>
+        </div>
+      </div>
+
+      <div class="panel-card">
+        <h3>Silhuetas e modelagens masculinas</h3>
+        <div class="silhouette-grid">
+          <div class="silhouette-item"><strong>Terno dois botões</strong> Lapela estreita, ombros estruturados, calça com dobra. Linho ou lã.</div>
+          <div class="silhouette-item"><strong>Camisa social</strong> Branca ou listrada, colarinho americano. Alfinete de gravata opcional.</div>
+          <div class="silhouette-item"><strong>Chapéu de feltro</strong> Fedora ou homburg. Panamá de palha no calor. Cor neutra.</div>
+          <div class="silhouette-item"><strong>Juventude urbana</strong> Calça de algodão, camisa xadrez ou listrada. Sem gravata, manga arregaçada.</div>
+        </div>
+      </div>
+
+      <div class="panel-card">
+        <h3>Cabelo, maquiagem e aparência</h3>
+        <div class="context-text">
+          <strong>Feminino:</strong> cabelo ondulado com permanente, coque lateral, penteado com cachos soltos fixados. Batom vermelho ou framboesa intenso — obrigatório. Blush rosado. Sobrancelha fina e arqueada. Lápis olho discreto. Perfume. <br><br>
+          <strong>Masculino elegante:</strong> cabelo penteado com brilhantina ou gomina, risco lateral marcado. Bem barbeado ou bigode fino estilo Clark Gable. Colarinho engomado.<br><br>
+          <strong>Masculino jovem:</strong> cabelo com ondas naturais, menos brilhantina. Cavanhaque ou cara limpa. Aparência menos formal.
+        </div>
+      </div>
+
+      <div class="panel-card">
+        <h3>Tecidos e texturas típicos</h3>
+        <div class="keyword-cloud">
+          <span class="keyword">Cetim</span>
+          <span class="keyword">Organza</span>
+          <span class="keyword">Tule</span>
+          <span class="keyword">Linho</span>
+          <span class="keyword">Gabardine</span>
+          <span class="keyword">Crepe romano</span>
+          <span class="keyword">Popelina</span>
+          <span class="keyword">Rendas portuguesas</span>
+          <span class="keyword">Voile</span>
+          <span class="keyword">Veludo cotelê</span>
+          <span class="keyword">Flanela</span>
+          <span class="keyword">Algodão mercerizado</span>
+          <span class="keyword">Tweed</span>
+          <span class="keyword">Viscose</span>
+        </div>
+      </div>
+
+      <div class="panel-card">
+        <h3>Referências audiovisuais e históricas</h3>
+        <ul class="ref-list">
+          <li>Filme <em>Absolutamente Certo!</em> (1957, Brasil)</li>
+          <li>Acervo Rádio Nacional — Arquivo Nacional BR</li>
+          <li>Revista <em>O Cruzeiro</em>, edições 1950–1958</li>
+          <li>Fotos de Emilinha Borba e Marlene nos anos 1950</li>
+          <li>Filme <em>Rio 40 Graus</em> (1955, Nelson Pereira dos Santos)</li>
+          <li>Acervo de figurinos do MAM Rio / MAM SP</li>
+          <li>Filme <em>Amar foi minha ruína</em> (1954, Brasil)</li>
+          <li>IBGE Memória: fotografias urbanas anos 1950</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== PERSONAGENS ===== -->
+  <div id="tab-personagens" class="section">
+    <div class="section-title">Fichas de figurino</div>
+    <div class="section-subtitle">Quatro personagens · Análise individual e planejamento visual</div>
+
+    <div class="char-selector">
+      <button class="char-btn celina active" onclick="showChar('celina')">✦ Celina</button>
+      <button class="char-btn orlando" onclick="showChar('orlando')">✦ Orlando</button>
+      <button class="char-btn nair" onclick="showChar('nair')">✦ Nair</button>
+      <button class="char-btn julio" onclick="showChar('julio')">✦ Júlio</button>
+    </div>
+
+    <!-- CELINA -->
+    <div id="char-celina" class="char-panel active">
+      <div class="char-header" style="background: #FDF0F3; border: 1px solid #F0C8D0;">
+        <div class="char-avatar" style="background: var(--bordeaux); color: var(--cream);">C</div>
+        <div class="char-title">
+          <h2 style="color: var(--bordeaux);">Celina</h2>
+          <div class="char-role" style="color: var(--bordeaux);">Cantora da rádio · Protagonista feminina</div>
+          <span class="char-tag" style="background: var(--bordeaux); color: white;">Glamour · Ambição · Palco</span>
+        </div>
+      </div>
+
+      <div class="ficha-card">
+        <h4>Ficha do personagem</h4>
+        <div class="ficha-row"><span class="ficha-label">Idade</span><span class="ficha-value">28–32 anos</span></div>
+        <div class="ficha-row"><span class="ficha-label">Função</span><span class="ficha-value">Protagonista dramática</span></div>
+        <div class="ficha-row"><span class="ficha-label">Classe social</span><span class="ficha-value">Média, aspirando ao alto escalão</span></div>
+        <div class="ficha-row"><span class="ficha-label">Ocupação</span><span class="ficha-value">Cantora de rádio</span></div>
+        <div class="ficha-row"><span class="ficha-label">Estado emocional</span><span class="ficha-value">Dor disfarçada de brilho</span></div>
+        <div class="ficha-row"><span class="ficha-label">Personalidade</span><span class="ficha-value">Dramática, calculista, vulnerável</span></div>
+      </div>
+
+      <div class="ficha-card">
+        <h4>Paleta individual e significados</h4>
+        <div class="palette-char">
+          <div style="text-align:center">
+            <div class="swatch-char" style="background:#7A1C2E;"></div>
+            <div class="swatch-tooltip">Bordô — paixão contida</div>
+          </div>
+          <div style="text-align:center">
+            <div class="swatch-char" style="background:#C4933F;"></div>
+            <div class="swatch-tooltip">Dourado — glamour</div>
+          </div>
+          <div style="text-align:center">
+            <div class="swatch-char" style="background:#F5EDD8;"></div>
+            <div class="swatch-tooltip">Marfim — fragilidade</div>
+          </div>
+          <div style="text-align:center">
+            <div class="swatch-char" style="background:#C2536A;"></div>
+            <div class="swatch-tooltip">Rosa antigo — feminilidade</div>
+          </div>
+          <div style="text-align:center">
+            <div class="swatch-char" style="background:#2C2C2A;"></div>
+            <div class="swatch-tooltip">Preto — ambição</div>
+          </div>
+        </div>
+        <div class="ficha-text" style="margin-top: 6px;">Dominância de bordô e preto com detalhes dourados — paleta de cantora de cabaré elegante. O marfim aparece em luvas e pele, criando contraste suave que reforça a feminilidade calculada.</div>
+      </div>
+
+      <div class="ficha-card">
+        <h4>Peças principais do figurino</h4>
+        <ul class="pecas-list">
+          <li>Vestido de auditório cetim bordô, saia godê midi, corpete sem alças ou com alças finas</li>
+          <li>Bolero curto de organza dourada ou bordado sobre o vestido</li>
+          <li>Luvas de renda branca ou marfim curtas (acima do pulso)</li>
+          <li>Scarpin preto bico fino, salto médio grosso</li>
+          <li>Colar de pérolas falsas (simbólico — ascensão social)</li>
+          <li>Broche decorativo no corpete ou cinto de cetim marcado</li>
+        </ul>
+      </div>
+
+      <div class="ficha-card">
+        <h4>Cabelo, maquiagem e acessórios</h4>
+        <div class="ficha-text">
+          <strong>Cabelo:</strong> ondulado com permanente, volume no topo, fixado com laquê. Inspiração em Dolores Duran e Emilinha Borba.<br><br>
+          <strong>Maquiagem:</strong> batom vermelho vivo ou borgonha, sobrancelha fina e arqueada desenhada, blush rosado intenso, cílios marcados com rímel.<br><br>
+          <strong>Acessórios:</strong> brincos de pérola, pulseira dourada, bolsinha de mão (clutch) de cetim ou veludo.
+        </div>
+      </div>
+
+      <div class="ficha-card" style="grid-column: 1 / -1;">
+        <h4>Justificativa narrativa</h4>
+        <div class="ficha-text">
+          O figurino de Celina precisa comunicar <strong>dois tempos simultâneos</strong>: o brilho que ela projeta para o público do estúdio e a fragilidade que esconde. O vestido de auditório é sua armadura — bordô e cetim são materiais de status que ela conquistou com esforço, mas o corte precisa ter algo ligeiramente <em>exagerado</em>, como se ela sempre estivesse se preparando para um palco maior. As luvas de renda criam uma barreira sutil entre ela e o mundo. O colar de pérolas falsas é o detalhe mais honesto: ela <em>parece</em> chique, mas ainda não <em>é</em> chique. A maquiagem intensa é de cantora de palco — funciona sob refletores, mas de perto revela esforço e cansaço. Em cenas de tensão, o figurino permanece impecável — Celina <strong>nunca deixa a máscara cair antes de precisar</strong>.
+        </div>
+      </div>
+
+      <div class="prompt-box">
+        <h4>Prompt sugerido para geração por IA</h4>
+        <p>Crie uma imagem realista de corpo inteiro de um personagem chamado Celina, ambientado no Brasil dos anos 1950. O personagem tem aproximadamente 30 anos, pertence à classe média com aspirações à alta sociedade, e trabalha como cantora de rádio numa emissora em São Paulo ou Rio de Janeiro. Sua personalidade é dramática, calculista e vulnerável. O figurino deve refletir glamour de palco contido e desejo de ascensão social. Use referências de moda brasileira dos anos 1950: vestido de cetim bordô com saia godê midi e corpete sem alças, bolero curto de organza dourada, luvas de renda curtas marfim, scarpin preto, colar de pérolas, broche dourado no corpete. Cabelo ondulado com permanente e volume, batom vermelho vivo, sobrancelha fina arqueada. A imagem deve parecer um estudo de figurino para cinema brasileiro, fundo neutro, iluminação suave de estúdio, corpo inteiro, visual realista e elegante.</p>
+      </div>
+    </div>
+
+    <!-- ORLANDO -->
+    <div id="char-orlando" class="char-panel">
+      <div class="char-header" style="background: #EEF1F8; border: 1px solid #C0CADF;">
+        <div class="char-avatar" style="background: var(--navy); color: var(--cream);">O</div>
+        <div class="char-title">
+          <h2 style="color: var(--navy);">Orlando</h2>
+          <div class="char-role" style="color: var(--navy);">Locutor principal · Antagonista sutil</div>
+          <span class="char-tag" style="background: var(--navy); color: white;">Elegância · Vaidade · Teatro</span>
+        </div>
+      </div>
+
+      <div class="ficha-card">
+        <h4>Ficha do personagem</h4>
+        <div class="ficha-row"><span class="ficha-label">Idade</span><span class="ficha-value">40–46 anos</span></div>
+        <div class="ficha-row"><span class="ficha-label">Função</span><span class="ficha-value">Conflito de ego e insegurança</span></div>
+        <div class="ficha-row"><span class="ficha-label">Classe social</span><span class="ficha-value">Média-alta, estabelecida</span></div>
+        <div class="ficha-row"><span class="ficha-label">Ocupação</span><span class="ficha-value">Locutor e apresentador</span></div>
+        <div class="ficha-row"><span class="ficha-label">Estado emocional</span><span class="ficha-value">Medo disfarçado de confiança</span></div>
+        <div class="ficha-row"><span class="ficha-label">Personalidade</span><span class="ficha-value">Carismático, vaidoso, inseguro</span></div>
+      </div>
+
+      <div class="ficha-card">
+        <h4>Paleta individual e significados</h4>
+        <div class="palette-char">
+          <div style="text-align:center">
+            <div class="swatch-char" style="background:#1A2744;"></div>
+            <div class="swatch-tooltip">Azul marinho — autoridade</div>
+          </div>
+          <div style="text-align:center">
+            <div class="swatch-char" style="background:#F5EDD8;"></div>
+            <div class="swatch-tooltip">Marfim — refinamento</div>
+          </div>
+          <div style="text-align:center">
+            <div class="swatch-char" style="background:#C4933F;"></div>
+            <div class="swatch-tooltip">Dourado — autoindulgência</div>
+          </div>
+          <div style="text-align:center">
+            <div class="swatch-char" style="background:#888780;"></div>
+            <div class="swatch-tooltip">Cinza médio — ambiguidade</div>
+          </div>
+        </div>
+        <div class="ficha-text" style="margin-top: 6px;">Paleta sóbria e masculina com detalhes que denunciam a vaidade: o abotoadouro dourado que brilha demais, a gravata com padrão levemente ostensivo para um locutor.</div>
+      </div>
+
+      <div class="ficha-card">
+        <h4>Peças principais do figurino</h4>
+        <ul class="pecas-list">
+          <li>Terno completo azul marinho de dois botões, linho ou gabardine</li>
+          <li>Camisa branca com colarinho americano, levemente engomada em excesso</li>
+          <li>Gravata de seda com miolo ou listras finas — mais chamativa que o necessário</li>
+          <li>Lenço no bolso (pochette) — detalhe de vaidade masculina</li>
+          <li>Abotoaduras douradas visíveis além da manga do paletó</li>
+          <li>Oxford bicolor ou envernizado (preto e branco ou marrom e marfim)</li>
+          <li>Chapéu fedora de feltro cinza escuro (para a chegada — carregado, não usado)</li>
+        </ul>
+      </div>
+
+      <div class="ficha-card">
+        <h4>Cabelo, maquiagem e acessórios</h4>
+        <div class="ficha-text">
+          <strong>Cabelo:</strong> penteado com muita gomina, risco lateral marcado à esquerda, extremamente controlado — cada fio no lugar. Pequenas entradas disfarçadas pelo penteado.<br><br>
+          <strong>Aparência:</strong> bigode fino estilo Clark Gable — referência direta ao glamour norte-americano que ele quer incarnar. Bem barbeado no resto.<br><br>
+          <strong>Acessórios:</strong> relógio de pulso dourado visível, anel de formatura ou sinete discreto.
+        </div>
+      </div>
+
+      <div class="ficha-card" style="grid-column: 1 / -1;">
+        <h4>Justificativa narrativa</h4>
+        <div class="ficha-text">
+          Orlando veste a <strong>armadura do homem bem-sucedido</strong> — mas com um excesso revelador. O terno é impecável, mas a gravata tem um padrão ligeiramente mais chamativo do que a situação exige. As abotoaduras douradas aparecem propositalmente fora da manga. O lenço no bolso é desnecessário num estúdio de rádio — ninguém vê além do microfone. Esses detalhes contam que Orlando <em>sempre está em cena</em>, mesmo sem câmera. O bigode fino funciona como marca registrada e escudo identitário: sem ele, ele seria só um homem de meia-idade com entradas. O chapéu fedora, carregado na mão na cena de chegada, é quase um adereço teatral — ele sabe que é visualmente impactante. À medida que a tensão do encerramento cresce, observar se alguma peça vai sendo desajustada (a gravata afrouxada levemente, o lenço retirado) pode compor arco emocional visual.
+        </div>
+      </div>
+
+      <div class="prompt-box">
+        <h4>Prompt sugerido para geração por IA</h4>
+        <p>Crie uma imagem realista de corpo inteiro de um personagem chamado Orlando, ambientado no Brasil dos anos 1950. O personagem tem aproximadamente 43 anos, pertence à classe média-alta, e trabalha como locutor principal de uma emissora de rádio em São Paulo ou Rio de Janeiro. Sua personalidade é carismática, vaidosa e discretamente insegura. O figurino deve refletir elegância profissional com teatralidade excessiva. Use referências de moda masculina brasileira dos anos 1950: terno completo azul marinho de dois botões em gabardine, camisa branca com colarinho americano muito bem engomada, gravata de seda com listras finas, lenço dobrado no bolso superior, abotoaduras douradas visíveis, sapato oxford bicolor preto e branco. Cabelo com muita gomina e risco lateral marcado, bigode fino estilo Clark Gable. A imagem deve parecer um estudo de figurino para cinema brasileiro, fundo neutro, iluminação suave, corpo inteiro, visual realista.</p>
+      </div>
+    </div>
+
+    <!-- NAIR -->
+    <div id="char-nair" class="char-panel">
+      <div class="char-header" style="background: #E8F5F5; border: 1px solid #A8D4D4;">
+        <div class="char-avatar" style="background: var(--teal-50s); color: var(--cream);">N</div>
+        <div class="char-title">
+          <h2 style="color: var(--teal-50s);">Nair</h2>
+          <div class="char-role" style="color: var(--teal-50s);">Sonoplasta e técnica · Força silenciosa</div>
+          <span class="char-tag" style="background: var(--teal-50s); color: white;">Funcionalidade · Discrição · Competência</span>
+        </div>
+      </div>
+
+      <div class="ficha-card">
+        <h4>Ficha do personagem</h4>
+        <div class="ficha-row"><span class="ficha-label">Idade</span><span class="ficha-value">35–42 anos</span></div>
+        <div class="ficha-row"><span class="ficha-label">Função</span><span class="ficha-value">Sustentação narrativa, revelação</span></div>
+        <div class="ficha-row"><span class="ficha-label">Classe social</span><span class="ficha-value">Média-baixa, trabalhadora</span></div>
+        <div class="ficha-row"><span class="ficha-label">Ocupação</span><span class="ficha-value">Técnica de sonoplastia</span></div>
+        <div class="ficha-row"><span class="ficha-label">Estado emocional</span><span class="ficha-value">Resignação com dignidade</span></div>
+        <div class="ficha-row"><span class="ficha-label">Personalidade</span><span class="ficha-value">Inteligente, prática, invisibilizada</span></div>
+      </div>
+
+      <div class="ficha-card">
+        <h4>Paleta individual e significados</h4>
+        <div class="palette-char">
+          <div style="text-align:center">
+            <div class="swatch-char" style="background:#2B6B6B;"></div>
+            <div class="swatch-tooltip">Verde-azulado — inteligência</div>
+          </div>
+          <div style="text-align:center">
+            <div class="swatch-char" style="background:#D4C5A9;"></div>
+            <div class="swatch-tooltip">Bege caqui — apagamento</div>
+          </div>
+          <div style="text-align:center">
+            <div class="swatch-char" style="background:#888780;"></div>
+            <div class="swatch-tooltip">Cinza — invisibilidade</div>
+          </div>
+          <div style="text-align:center">
+            <div class="swatch-char" style="background:#4A3728;"></div>
+            <div class="swatch-tooltip">Marrom — enraizamento</div>
+          </div>
+        </div>
+        <div class="ficha-text" style="margin-top: 6px;">Paleta intencionalmente apagada no geral, com um acento de verde-azulado que revela sua inteligência a quem presta atenção — ela não é cinza por dentro. A ausência de adornos é narrativa, não falta de gosto.</div>
+      </div>
+
+      <div class="ficha-card">
+        <h4>Peças principais do figurino</h4>
+        <ul class="pecas-list">
+          <li>Saia lápis midi de gabardine cinza ou bege escuro, sem babados</li>
+          <li>Blusa de popelina ou crepe de mangas compridas, discreta — azul-esverdeado apagado ou cinza</li>
+          <li>Avental técnico ou jaleco leve sobre a roupa (indica função de bastidores)</li>
+          <li>Sapato de couro marrom, baixo e confortável — fechado, sem ornamento</li>
+          <li>Óculos de armação redonda ou quadrada fina — detalhe intelectual da época</li>
+          <li>Relógio de pulso funcional — precisa de pontualidade para o programa</li>
+        </ul>
+      </div>
+
+      <div class="ficha-card">
+        <h4>Cabelo, maquiagem e acessórios</h4>
+        <div class="ficha-text">
+          <strong>Cabelo:</strong> coque baixo ou trança enrolada — funcional, fora do rosto. Sem permanente elaborada. Cabelo preso com prendedor simples ou xuxinha discreta.<br><br>
+          <strong>Maquiagem:</strong> mínima. Talvez uma camada de pó facial. Sem batom vivo — no máximo um nude rosado. Sobrancelha natural, apenas levemente alinhada.<br><br>
+          <strong>Acessórios:</strong> ausência deliberada de joias. No máximo um brinco de pressão minúsculo. Às vezes um lenço de bolso no avental para limpar equipamentos.
+        </div>
+      </div>
+
+      <div class="ficha-card" style="grid-column: 1 / -1;">
+        <h4>Justificativa narrativa</h4>
+        <div class="ficha-text">
+          O figurino de Nair é o mais <strong>politicamente carregado</strong> do roteiro, justamente por sua aparente ausência de intenção. Enquanto Celina usa o figurino como escudo de glamour e Orlando como armadura de status, Nair usa a roupa como <em>camuflagem</em>. Os tons neutros e o jaleco técnico tornam-na literalmente invisível no estúdio — que é exatamente o que o ambiente exige dela. Mas o detalhe do óculos e o relógio de pulso são pistas visuais de sua competência: ela controla o tempo, ela enxerga o que os outros não veem. O verde-azulado apagado de sua blusa é a cor mais honesta do roteiro — não é glamour, não é autoridade, é inteligência trabalhando em silêncio. Se o roteiro tiver um momento de virada para Nair, é possível pensar num detalhe que ela revela — um broche escondido sob o avental, por exemplo — como gesto de afirmação identitária.
+        </div>
+      </div>
+
+      <div class="prompt-box">
+        <h4>Prompt sugerido para geração por IA</h4>
+        <p>Crie uma imagem realista de corpo inteiro de um personagem chamado Nair, ambientado no Brasil dos anos 1950. O personagem tem aproximadamente 38 anos, pertence à classe média-baixa trabalhadora, e é técnica de sonoplastia de uma emissora de rádio no Rio de Janeiro ou São Paulo. Sua personalidade é inteligente, prática e frequentemente ignorada pelos colegas. O figurino deve refletir funcionalidade e força silenciosa. Use referências de moda feminina de trabalho brasileira dos anos 1950: saia lápis midi de gabardine cinza ou bege escuro, blusa de mangas compridas em crepe azul-esverdeado apagado, avental técnico ou jaleco leve por cima, sapato de couro marrom baixo e fechado, óculos de armação redonda fina, relógio de pulso simples. Cabelo preso em coque baixo funcional, maquiagem mínima sem batom vivo. Sem joias ou adornos. A imagem deve parecer um estudo de figurino para cinema brasileiro, fundo neutro, iluminação suave, corpo inteiro, visual realista.</p>
+      </div>
+    </div>
+
+    <!-- JÚLIO -->
+    <div id="char-julio" class="char-panel">
+      <div class="char-header" style="background: #F8EDE9; border: 1px solid #E0C0B5;">
+        <div class="char-avatar" style="background: var(--rust); color: var(--cream);">J</div>
+        <div class="char-title">
+          <h2 style="color: var(--rust);">Júlio</h2>
+          <div class="char-role" style="color: var(--rust);">Redator de anúncios · Jovem idealista</div>
+          <span class="char-tag" style="background: var(--rust); color: white;">Juventude · Urbanidade · Ingenuidade</span>
+        </div>
+      </div>
+
+      <div class="ficha-card">
+        <h4>Ficha do personagem</h4>
+        <div class="ficha-row"><span class="ficha-label">Idade</span><span class="ficha-value">22–26 anos</span></div>
+        <div class="ficha-row"><span class="ficha-label">Função</span><span class="ficha-value">Catalisador do conflito, testemunha</span></div>
+        <div class="ficha-row"><span class="ficha-label">Classe social</span><span class="ficha-value">Média, filho de família simples</span></div>
+        <div class="ficha-row"><span class="ficha-label">Ocupação</span><span class="ficha-value">Redator de anúncios publicitários</span></div>
+        <div class="ficha-row"><span class="ficha-label">Estado emocional</span><span class="ficha-value">Entusiasmo ansioso, insegurança</span></div>
+        <div class="ficha-row"><span class="ficha-label">Personalidade</span><span class="ficha-value">Criativo, ansioso, idealista</span></div>
+      </div>
+
+      <div class="ficha-card">
+        <h4>Paleta individual e significados</h4>
+        <div class="palette-char">
+          <div style="text-align:center">
+            <div class="swatch-char" style="background:#8B3A2A;"></div>
+            <div class="swatch-tooltip">Ferrugem — energia jovem</div>
+          </div>
+          <div style="text-align:center">
+            <div class="swatch-char" style="background:#D4C5A9;"></div>
+            <div class="swatch-tooltip">Bege — casualidade</div>
+          </div>
+          <div style="text-align:center">
+            <div class="swatch-char" style="background:#639922;"></div>
+            <div class="swatch-tooltip">Verde oliva — esperança</div>
+          </div>
+          <div style="text-align:center">
+            <div class="swatch-char" style="background:#F5EDD8;"></div>
+            <div class="swatch-tooltip">Creme — juventude</div>
+          </div>
+        </div>
+        <div class="ficha-text" style="margin-top: 6px;">Paleta mais quente e casual — contrastando diretamente com o formalismo de Orlando. Xadrez ou listras, cores mais vivas, menos estrutura — a roupa conta que ele ainda não aprendeu as regras.</div>
+      </div>
+
+      <div class="ficha-card">
+        <h4>Peças principais do figurino</h4>
+        <ul class="pecas-list">
+          <li>Calça social de algodão ou linho bege ou cinza-claro — bem passada mas sem dobra perfeita</li>
+          <li>Camisa xadrez ou listrada de manga comprida — sem gravata, ou gravata afrouxada</li>
+          <li>Suspensório — detalhe jovem e informal dos anos 1950 masculinos</li>
+          <li>Sapato casual de couro marrom — oxford simples ou loafer</li>
+          <li>Paletó de linho bege ou cinza que ele carrega no braço (não usa o tempo todo)</li>
+          <li>Caneta tinteiro ou lapiseira no bolso da camisa — marca do redator</li>
+        </ul>
+      </div>
+
+      <div class="ficha-card">
+        <h4>Cabelo, maquiagem e acessórios</h4>
+        <div class="ficha-text">
+          <strong>Cabelo:</strong> ondas naturais com pouca gomina — menos formal que Orlando, ligeiramente despenteado de tanto coçar a cabeça pensando. Nenhum risco muito marcado.<br><br>
+          <strong>Aparência:</strong> cara completamente lisa, sem bigode. Eventualmente uma sombra de barba que ele esqueceu de fazer por causa do nervosismo. Ar jovem, quase de estudante.<br><br>
+          <strong>Acessórios:</strong> bloco de notas ou fichas de roteiro sempre às mãos. Relógio simples. Sem anel, sem alfinete de gravata, sem lenço.
+        </div>
+      </div>
+
+      <div class="ficha-card" style="grid-column: 1 / -1;">
+        <h4>Justificativa narrativa</h4>
+        <div class="ficha-text">
+          Júlio é o único personagem cujo figurino <strong>contradiz o ambiente</strong> deliberadamente. Ele está num estúdio onde todos se vestem para performar — Celina para o palco, Orlando para a câmera imaginária, Nair para o anonimato. Júlio simplesmente <em>não sabe direito o código ainda</em>. A camisa xadrez num ambiente de pessoas de terno é o sinal visual da sua posição de outsider e da sua ingenuidade. O suspensório é um detalhe muito preciso: é prático, jovem e levemente desajeitado — ele não teria paciência para o formalismo total do cinto com o terno. A caneta no bolso da camisa é o objeto de identidade: ele é o homem das palavras, não da voz. O paletó carregado no braço diz que ele sabe que precisa parecer mais sério — mas ainda não consegue. Seu figurino deve envelhecer levemente ao longo do roteiro: manga arregaçada, gravata completamente tirada, cabelo mais bagunçado.
+        </div>
+      </div>
+
+      <div class="prompt-box">
+        <h4>Prompt sugerido para geração por IA</h4>
+        <p>Crie uma imagem realista de corpo inteiro de um personagem chamado Júlio, ambientado no Brasil dos anos 1950. O personagem tem aproximadamente 23 anos, pertence à classe média simples, e trabalha como redator de anúncios publicitários numa emissora de rádio em São Paulo. Sua personalidade é criativa, ansiosa e idealista. O figurino deve refletir juventude urbana e ingenuidade. Use referências de moda masculina jovem brasileira dos anos 1950: calça social de algodão bege ou cinza-claro, camisa de xadrez verde oliva e branco com mangas compridas levemente arregaçadas, suspensório marrom, sapato oxford de couro marrom simples, paletó de linho bege jogado sobre um braço. Caneta no bolso da camisa, bloco de notas na mão. Cabelo com ondas naturais e pouca gomina, ligeiramente despenteado. Cara lisa sem bigode, ar de estudante. A imagem deve parecer um estudo de figurino para cinema brasileiro, fundo neutro, iluminação suave, corpo inteiro, visual realista.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== COMPARATIVO ===== -->
+  <div id="tab-comparativo" class="section">
+    <div class="section-title">Comparativo dos quatro personagens</div>
+    <div class="section-subtitle">Diferenças visuais, simbólicas e narrativas entre os figurinos</div>
+
+    <div class="comp-grid">
+      <div class="comp-card" style="background: #FDF0F3; border: 1px solid #F0C8D0;">
+        <h3 style="color: var(--bordeaux);">Celina</h3>
+        <div class="comp-role" style="color: var(--bordeaux);">Cantora · Palco</div>
+        <div class="comp-palette">
+          <div class="comp-sw" style="background:#7A1C2E;"></div>
+          <div class="comp-sw" style="background:#C4933F;"></div>
+          <div class="comp-sw" style="background:#F5EDD8;"></div>
+          <div class="comp-sw" style="background:#2C2C2A;"></div>
+        </div>
+        <div class="comp-desc" style="color: var(--text-mid);">Cetim e tule. Vestido de auditório. Glamour calculado. Luvas de renda. Batom vermelho.</div>
+      </div>
+      <div class="comp-card" style="background: #EEF1F8; border: 1px solid #C0CADF;">
+        <h3 style="color: var(--navy);">Orlando</h3>
+        <div class="comp-role" style="color: var(--navy);">Locutor · Bastidores</div>
+        <div class="comp-palette">
+          <div class="comp-sw" style="background:#1A2744;"></div>
+          <div class="comp-sw" style="background:#F5EDD8;"></div>
+          <div class="comp-sw" style="background:#C4933F;"></div>
+          <div class="comp-sw" style="background:#888780;"></div>
+        </div>
+        <div class="comp-desc" style="color: var(--text-mid);">Terno e gravata. Oxford bicolor. Aparência impecável com detalhes excessivos. Bigode fino.</div>
+      </div>
+      <div class="comp-card" style="background: #E8F5F5; border: 1px solid #A8D4D4;">
+        <h3 style="color: var(--teal-50s);">Nair</h3>
+        <div class="comp-role" style="color: var(--teal-50s);">Técnica · Bastidores</div>
+        <div class="comp-palette">
+          <div class="comp-sw" style="background:#2B6B6B;"></div>
+          <div class="comp-sw" style="background:#D4C5A9;"></div>
+          <div class="comp-sw" style="background:#888780;"></div>
+          <div class="comp-sw" style="background:#4A3728;"></div>
+        </div>
+        <div class="comp-desc" style="color: var(--text-mid);">Saia lápis e jaleco. Tons neutros. Coque funcional. Óculos. Ausência de adornos.</div>
+      </div>
+      <div class="comp-card" style="background: #F8EDE9; border: 1px solid #E0C0B5;">
+        <h3 style="color: var(--rust);">Júlio</h3>
+        <div class="comp-role" style="color: var(--rust);">Redator · Recém-chegado</div>
+        <div class="comp-palette">
+          <div class="comp-sw" style="background:#8B3A2A;"></div>
+          <div class="comp-sw" style="background:#D4C5A9;"></div>
+          <div class="comp-sw" style="background:#639922;"></div>
+          <div class="comp-sw" style="background:#F5EDD8;"></div>
+        </div>
+        <div class="comp-desc" style="color: var(--text-mid);">Xadrez e suspensório. Informal no ambiente formal. Paletó no braço. Caneta no bolso.</div>
+      </div>
+    </div>
+
+    <table class="comp-diff-table">
+      <thead>
+        <tr>
+          <th>Dimensão</th>
+          <th style="color: #F0C8D0;">Celina</th>
+          <th style="color: #B5D4F4;">Orlando</th>
+          <th style="color: #9FE1CB;">Nair</th>
+          <th style="color: #F5C4B3;">Júlio</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Relação com o ambiente</td>
+          <td>Protagoniza visualmente</td>
+          <td>Domina o espaço</td>
+          <td>Desaparece no espaço</td>
+          <td>Deslocado no espaço</td>
+        </tr>
+        <tr>
+          <td>Nível de formalidade</td>
+          <td>Formal de palco</td>
+          <td>Formal de escritório</td>
+          <td>Funcional de técnica</td>
+          <td>Semiformal casual</td>
+        </tr>
+        <tr>
+          <td>Tecido principal</td>
+          <td>Cetim, organza</td>
+          <td>Linho, gabardine</td>
+          <td>Gabardine, popelina</td>
+          <td>Algodão, linho leve</td>
+        </tr>
+        <tr>
+          <td>Elemento de vaidade</td>
+          <td>Brilho, colar de pérolas</td>
+          <td>Lenço, abotoaduras</td>
+          <td>Nenhum (narrativo)</td>
+          <td>Nenhum (inconsciente)</td>
+        </tr>
+        <tr>
+          <td>Classe social lida</td>
+          <td>Alta (aspiração)</td>
+          <td>Média-alta (real)</td>
+          <td>Média-baixa (apagada)</td>
+          <td>Média (jovem)</td>
+        </tr>
+        <tr>
+          <td>Objeto identitário</td>
+          <td>Batom e luvas</td>
+          <td>Bigode e chapéu</td>
+          <td>Óculos e relógio</td>
+          <td>Caneta e bloco</td>
+        </tr>
+        <tr>
+          <td>O que o figurino esconde</td>
+          <td>Medo de não ser famosa</td>
+          <td>Medo de tornar-se obsoleto</td>
+          <td>Indignação contida</td>
+          <td>Insegurança e inexperiência</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ===== PRODUÇÃO ===== -->
+  <div id="tab-producao" class="section">
+    <div class="section-title">Planejamento de produção real</div>
+    <div class="section-subtitle">Como montar os figurinos com recursos limitados</div>
+
+    <div class="prod-grid">
+
+      <div class="prod-char-card">
+        <div class="prod-char-header" style="background: #7A1C2E; color: #F5EDD8;">Celina</div>
+        <div class="prod-body">
+          <div class="prod-category">
+            <div class="prod-cat-label"><span class="prod-badge brechó">Brechó</span></div>
+            <div class="prod-items">Vestido de baile anos 1950–60 em cetim ou tafetá; luvas de renda; scarpin vintage</div>
+          </div>
+          <div class="prod-category">
+            <div class="prod-cat-label"><span class="prod-badge acervo">Acervo pessoal</span></div>
+            <div class="prod-items">Colar de pérolas plásticas; broche dourado; brincos de pressão</div>
+          </div>
+          <div class="prod-category">
+            <div class="prod-cat-label"><span class="prod-badge adapt">Adaptação</span></div>
+            <div class="prod-items">Bolero pode ser feito com voile dourado costurado no caimento; vestido pode ser tingido em bordô se necessário</div>
+          </div>
+          <div class="prod-category">
+            <div class="prod-cat-label"><span class="prod-badge aluguel">Aluguel</span></div>
+            <div class="prod-items">Vestido de época completo de produtora de fantasia caso brechó não atenda ao corte da época</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="prod-char-card">
+        <div class="prod-char-header" style="background: #1A2744; color: #F5EDD8;">Orlando</div>
+        <div class="prod-body">
+          <div class="prod-category">
+            <div class="prod-cat-label"><span class="prod-badge brechó">Brechó</span></div>
+            <div class="prod-items">Terno de dois botões (evitar lapela larga de anos 1970–80); gravata de seda estreita; chapéu fedora</div>
+          </div>
+          <div class="prod-category">
+            <div class="prod-cat-label"><span class="prod-badge acervo">Acervo pessoal</span></div>
+            <div class="prod-items">Camisa branca social; lenço de bolso branco; sapato oxford marrom ou preto</div>
+          </div>
+          <div class="prod-category">
+            <div class="prod-cat-label"><span class="prod-badge adapt">Adaptação</span></div>
+            <div class="prod-items">Abotoaduras douradas compradas em sapataria ou loja de adereços; gomina para pentear adequadamente</div>
+          </div>
+          <div class="prod-category">
+            <div class="prod-cat-label"><span class="prod-badge aluguel">Atenção</span></div>
+            <div class="prod-items">Bigode pode ser postiço — verificar marcas de teatros locais. Maquiagem masculina discreta para câmera</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="prod-char-card">
+        <div class="prod-char-header" style="background: #2B6B6B; color: #F5EDD8;">Nair</div>
+        <div class="prod-body">
+          <div class="prod-category">
+            <div class="prod-cat-label"><span class="prod-badge acervo">Acervo pessoal</span></div>
+            <div class="prod-items">Saia lápis midi neutra (quase todos os guarda-roupas têm); blusa discreta de mangas compridas</div>
+          </div>
+          <div class="prod-category">
+            <div class="prod-cat-label"><span class="prod-badge brechó">Brechó</span></div>
+            <div class="prod-items">Jaleco de algodão ou avental de trabalho; óculos de armação redonda ou quadrada fina; sapato fechado baixo</div>
+          </div>
+          <div class="prod-category">
+            <div class="prod-cat-label"><span class="prod-badge adapt">Adaptação</span></div>
+            <div class="prod-items">Tingir blusa em azul-esverdeado apagado com corante de tecido; envelhecer levemente o jaleco com chá preto para tirar o branco novo demais</div>
+          </div>
+          <div class="prod-category">
+            <div class="prod-cat-label"><span class="prod-badge acervo">Continuidade</span></div>
+            <div class="prod-items">Figurino mais fácil de manter em continuidade — sem adornos que possam ser perdidos entre tomadas</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="prod-char-card">
+        <div class="prod-char-header" style="background: #8B3A2A; color: #F5EDD8;">Júlio</div>
+        <div class="prod-body">
+          <div class="prod-category">
+            <div class="prod-cat-label"><span class="prod-badge acervo">Acervo pessoal</span></div>
+            <div class="prod-items">Calça social bege ou cinza; paletó de linho de qualquer época (lapela larga pode ser reaproveitada com ajuste)</div>
+          </div>
+          <div class="prod-category">
+            <div class="prod-cat-label"><span class="prod-badge brechó">Brechó</span></div>
+            <div class="prod-items">Camisa xadrez manga comprida; suspensório de couro; sapato oxford marrom simples</div>
+          </div>
+          <div class="prod-category">
+            <div class="prod-cat-label"><span class="prod-badge adapt">Adereços</span></div>
+            <div class="prod-items">Caneta tinteiro antiga (papelarias têm réplicas); bloco de notas amarelado; passa gomina mínima no cabelo</div>
+          </div>
+          <div class="prod-category">
+            <div class="prod-cat-label"><span class="prod-badge aluguel">Continuidade</span></div>
+            <div class="prod-items">Planejar arcos de desmonte: manga arregaçada e gravata afrouxada na segunda metade das cenas. Fotografar cada estado</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="ia-box" style="margin-top: 1.5rem;">
+      <strong>⚠ Possíveis erros das imagens geradas por IA — o que corrigir:</strong><br>
+      A IA pode inserir cortes de lapela dos anos 1970, tênis ou calçados modernos, maquiagem de anos 1980 (delineador exagerado), cabelos com volume ao estilo anos 1980, tecidos sintéticos brilhosos demais característicos de décadas posteriores, ou penteados com babyliss. Caso isso ocorra, usar o <em>prompt de refinamento</em> destacando o período exato (Brasil, 1950–1958) e citando referências como Emilinha Borba, Marlene ou atores do cinema nacional da época para calibrar o resultado.
+    </div>
+  </div>
+
+  <!-- ===== FONTES ===== -->
+  <div id="tab-fontes" class="section">
+    <div class="section-title">Referências e fontes</div>
+    <div class="section-subtitle">Fontes consultadas para pesquisa histórica, estética e visual</div>
+
+    <div class="refs-section">
+      <div class="refs-category">
+        <h3>Cinema e audiovisual brasileiro dos anos 1950</h3>
+        <div class="refs-grid">
+          <div class="ref-item"><strong>Absolutamente Certo! (1957)</strong> Dir. Anselmo Duarte — figurinos de estúdio de rádio e TV, moda urbana paulistana</div>
+          <div class="ref-item"><strong>Rio 40 Graus (1955)</strong> Dir. Nelson Pereira dos Santos — cotidiano carioca, classes populares e médias</div>
+          <div class="ref-item"><strong>Amar foi minha ruína (1954)</strong> Melodrama nacional — figurinos femininos de época no Brasil</div>
+          <div class="ref-item"><strong>É com esse que eu vou (1958)</strong> Chanchadas da Atlântida com Oscarito — moda masculina popular</div>
+        </div>
+      </div>
+      <div class="refs-category">
+        <h3>Acervos digitais e fotografia histórica</h3>
+        <div class="refs-grid">
+          <div class="ref-item"><strong>Arquivo Nacional — Memória da Rádio Nacional</strong> hemeroteca.bn.gov.br — fotos de estúdio, cantoras e locutores reais</div>
+          <div class="ref-item"><strong>Acervo Folha de S.Paulo</strong> acervo.folha.com.br — fotografias de moda e vida urbana anos 1950</div>
+          <div class="ref-item"><strong>Museu da Moda (MUMA)</strong> Curitiba — acervo digital de peças brasileiras década de 1950</div>
+          <div class="ref-item"><strong>IBGE Memória</strong> memoria.ibge.gov.br — fotografias urbanas de São Paulo e Rio nos anos 1950</div>
+        </div>
+      </div>
+      <div class="refs-category">
+        <h3>Revistas e publicações da época</h3>
+        <div class="refs-grid">
+          <div class="ref-item"><strong>Revista O Cruzeiro (1950–1958)</strong> Disponível na Hemeroteca Digital BN — moda, publicidade, celebridades</div>
+          <div class="ref-item"><strong>Revista Manchete (1952–1958)</strong> Hemeroteca Digital BN — fotojornalismo e vida social carioca</div>
+          <div class="ref-item"><strong>Revista A Cigarra (anos 1950)</strong> Moda feminina, comportamento social, anúncios de tecidos</div>
+          <div class="ref-item"><strong>Revista Capricho (1952–1958)</strong> Editora Abril — moda jovem e comportamento feminino brasileiro</div>
+        </div>
+      </div>
+      <div class="refs-category">
+        <h3>Referências de personalidades reais da época</h3>
+        <div class="refs-grid">
+          <div class="ref-item"><strong>Emilinha Borba</strong> Cantora da Rádio Nacional — figurinos de auditório, glamour anos 1950</div>
+          <div class="ref-item"><strong>Marlene</strong> Rival de Emilinha — vestidos de palco, penteados com permanente</div>
+          <div class="ref-item"><strong>Dolores Duran</strong> Cantora e compositora — elegância urbana sofisticada anos 1950</div>
+          <div class="ref-item"><strong>César de Alencar</strong> Locutor da Rádio Nacional — referência de figurino masculino de apresentador</div>
+        </div>
+      </div>
+      <div class="refs-category">
+        <h3>Referências de moda e contexto histórico</h3>
+        <div class="refs-grid">
+          <div class="ref-item"><strong>Dior New Look (1947–1957)</strong> Referência internacional que chegou ao Brasil via revistas e costureiras</div>
+          <div class="ref-item"><strong>Museu Christian Dior</strong> musee-dior-granville.com — arquivo digital de silhuetas dos anos 1950</div>
+          <div class="ref-item"><strong>MoMu — Museum of Fashion Antwerp</strong> momu.be — acervo de peças originais da década de 1950</div>
+          <div class="ref-item"><strong>Vintage Fashion Guild</strong> vintagefashionguild.org — guia de identificação de peças por década</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function showTab(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function showChar(name) {
+  document.querySelectorAll('.char-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.char-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('char-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
