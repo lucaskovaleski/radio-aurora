@@ -24,12 +24,39 @@
   --charcoal:#2C2C2A;
   --text:#1C1A14;
 }
-html{scroll-behavior:smooth;font-size:16px}
+html{font-size:16px}
 body{
   font-family:'Source Sans 3',sans-serif;
   background:var(--navy-dark);
   color:var(--cream);
-  overflow-x:hidden;
+  overflow:hidden;
+  height:100vh;
+  width:100vw;
+}
+/* ─── SLIDE CONTAINER ─── */
+#slide-container{
+  height:100vh;
+  overflow-y:scroll;
+  scroll-snap-type:y mandatory;
+  scroll-behavior:smooth;
+  -webkit-overflow-scrolling:touch;
+}
+#slide-container::-webkit-scrollbar{display:none}
+/* each slide snaps */
+.slide{
+  scroll-snap-align:start;
+  scroll-snap-stop:always;
+  height:100vh;
+  width:100%;
+  position:relative;
+  flex-shrink:0;
+}
+/* tall slides scroll internally before snapping next */
+.slide-tall{
+  scroll-snap-align:start;
+  min-height:100vh;
+  position:relative;
+  flex-shrink:0;
 }
 /* ─── NOISE OVERLAY ─── */
 body::before{
@@ -62,8 +89,22 @@ body::before{
 
 /* ─── SECTIONS ─── */
 .section{
-  min-height:100vh;position:relative;
+  position:relative;
   overflow:hidden;
+}
+/* .section.slide = height garantida */
+.section.slide{
+  height:100vh !important;
+}
+/* Inner scroll containers hide their scrollbar */
+.section.slide > div[style*="overflow-y:auto"],
+.section.slide > div[style*="overflow-y: auto"]{
+  scrollbar-width:none;
+  -ms-overflow-style:none;
+}
+.section.slide > div[style*="overflow-y:auto"]::-webkit-scrollbar,
+.section.slide > div[style*="overflow-y: auto"]::-webkit-scrollbar{
+  display:none;
 }
 
 /* ═══════════════════════════════
@@ -291,7 +332,7 @@ body::before{
 .photo-grid{
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
-  gap:16px;max-width:1200px;margin:0 auto;
+  gap:16px;max-width:1000px;margin:0 auto;
 }
 .photo-slot{
   aspect-ratio:3/4;position:relative;
@@ -506,7 +547,7 @@ body::before{
   display:flex;
   background:var(--navy-dark);
   border-bottom:1px solid rgba(196,147,63,.2);
-  overflow-x:auto;position:sticky;top:0;z-index:50;
+  overflow-x:auto;flex-shrink:0;
 }
 .char-tab-btn{
   flex:1;min-width:120px;
@@ -529,11 +570,11 @@ body::before{
   color:inherit;letter-spacing:0;text-transform:none;
 }
 .char-panel{display:none}
-.char-panel.active{display:grid;grid-template-columns:1fr 1fr;min-height:80vh}
 .char-left{
-  padding:4rem 3rem;
-  display:flex;flex-direction:column;gap:2rem;
+  padding:2rem 2.5rem;
+  display:flex;flex-direction:column;gap:1.2rem;
   position:relative;
+  overflow-y:auto;
 }
 .char-right{
   position:relative;overflow:hidden;
@@ -818,26 +859,139 @@ body::before{
   width:0%;z-index:10000;
   transition:width .1s;
 }
+
+/* ══════════════════════════════
+   TRANSIÇÕES IMERSIVAS
+══════════════════════════════ */
+/* Overlay de transição entre slides */
+#transition-overlay{
+  position:fixed;inset:0;z-index:5000;
+  pointer-events:none;
+  display:flex;
+}
+.overlay-panel{
+  flex:1;background:var(--navy-dark);
+  transform:scaleY(0);
+  transform-origin:bottom;
+  transition:transform .45s cubic-bezier(.76,0,.24,1);
+}
+.overlay-panel:nth-child(2){transition-delay:.04s}
+.overlay-panel:nth-child(3){transition-delay:.08s}
+.overlay-panel:nth-child(4){transition-delay:.12s}
+/* active = curtains closing */
+#transition-overlay.closing .overlay-panel{transform:scaleY(1)}
+/* opening = curtains opening from top */
+#transition-overlay.opening .overlay-panel{
+  transform-origin:top;
+  transform:scaleY(0);
+}
+#transition-overlay.opening-start .overlay-panel{
+  transform-origin:top;
+  transform:scaleY(1);
+}
+
+/* Slide label que aparece na transição */
+#slide-label{
+  position:fixed;left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  z-index:5100;pointer-events:none;
+  text-align:center;
+  opacity:0;transition:opacity .3s;
+}
+#slide-label.visible{opacity:1}
+#slide-label-eyebrow{
+  font-size:10px;letter-spacing:4px;text-transform:uppercase;
+  color:var(--gold);display:block;margin-bottom:.5rem;
+}
+#slide-label-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(1.8rem,4vw,3rem);
+  font-weight:700;color:var(--cream);
+  line-height:1.1;
+}
+
+.char-panel{display:none}
+.char-panel.active{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  flex:1;
+  min-height:0;
+  overflow:hidden;
+  animation:charFadeIn .5s ease forwards;
+}
+@keyframes charFadeIn{
+  from{opacity:0;transform:translateX(30px)}
+  to{opacity:1;transform:translateX(0)}
+}
+
+/* Indicador de personagem atual */
+#char-indicator{
+  position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);
+  display:none;gap:8px;z-index:200;
+}
+#char-indicator.visible{display:flex}
+.char-ind-dot{
+  width:6px;height:6px;border-radius:50%;
+  border:1.5px solid rgba(196,147,63,.5);
+  background:transparent;cursor:pointer;
+  transition:all .3s;
+}
+.char-ind-dot.active{background:var(--gold);border-color:var(--gold)}
+
+/* hint de navegação */
+#nav-hint{
+  position:fixed;bottom:1.5rem;right:5rem;
+  font-size:9px;letter-spacing:2px;text-transform:uppercase;
+  color:rgba(196,147,63,.4);
+  opacity:0;transition:opacity .5s;
+  pointer-events:none;
+}
+#nav-hint.visible{opacity:1}
+
+/* stripe transitions entre slides — mantidas mas agora dentro dos slides */
+.stripe-transition{display:none}
+
 </style>
 </head>
 <body>
 
 <div id="progress"></div>
 
+<div id="transition-overlay">
+  <div class="overlay-panel"></div>
+  <div class="overlay-panel"></div>
+  <div class="overlay-panel"></div>
+  <div class="overlay-panel"></div>
+</div>
+<div id="slide-label">
+  <span id="slide-label-eyebrow"></span>
+  <div id="slide-label-title"></div>
+</div>
+<div id="char-indicator">
+  <div class="char-ind-dot active" data-char="celina"></div>
+  <div class="char-ind-dot" data-char="orlando"></div>
+  <div class="char-ind-dot" data-char="nair"></div>
+  <div class="char-ind-dot" data-char="julio"></div>
+</div>
+<div id="nav-hint">scroll para avançar</div>
 <div id="nav-dots">
   <div class="nav-dot active" onclick="scrollTo(0,'s1')"><span class="nav-dot-label">Abertura</span></div>
   <div class="nav-dot" onclick="scrollTo(0,'s2')"><span class="nav-dot-label">Contexto</span></div>
+  <div class="nav-dot" onclick="scrollTo(0,'s2b')"><span class="nav-dot-label">Referências Visuais</span></div>
   <div class="nav-dot" onclick="scrollTo(0,'s3')"><span class="nav-dot-label">Moodboard</span></div>
   <div class="nav-dot" onclick="scrollTo(0,'s4')"><span class="nav-dot-label">Personagens</span></div>
   <div class="nav-dot" onclick="scrollTo(0,'s5')"><span class="nav-dot-label">Comparativo</span></div>
-  <div class="nav-dot" onclick="scrollTo(0,'s6')"><span class="nav-dot-label">Produção</span></div>
+  <div class="nav-dot" onclick="scrollTo(0,'s6')"><span class="nav-dot-label">Produção I</span></div>
+  <div class="nav-dot" onclick="scrollTo(0,'s6b')"><span class="nav-dot-label">Produção II</span></div>
   <div class="nav-dot" onclick="scrollTo(0,'s7')"><span class="nav-dot-label">Referências</span></div>
-</div>
+</div><!-- /nav-dots -->
+
+<div id="slide-container">
 
 <!-- ══════════════════════════════════════
      S1 — ABERTURA
 ══════════════════════════════════════ -->
-<section class="section" id="s1">
+<section class="section slide" id="s1">
   <div class="radio-rings">
     <div class="ring"></div>
     <div class="ring"></div>
@@ -871,190 +1025,123 @@ body::before{
 <div class="stripe-transition dark-to-cream"></div>
 
 <!-- ══════════════════════════════════════
-     S2 — CONTEXTO DA ÉPOCA
+     S2a — CONTEXTO DA ÉPOCA
 ══════════════════════════════════════ -->
-<section class="section" id="s2" style="background:var(--cream);color:var(--text)">
-  <div class="section-header reveal">
-    <span class="section-eyebrow">Introdução</span>
-    <h2 class="section-title-big">Contexto da <em>época</em></h2>
-    <p class="section-lead">O Brasil dos anos 1950: rádio como centro da cultura de massa, elegância urbana influenciada pelo cinema e por Paris, e uma sociedade dividida entre a tradição e a modernização acelerada.</p>
-  </div>
-
-  <div class="context-grid">
-    <div class="context-block reveal">
-      <h3>Cenário histórico</h3>
-      <p>Entre o fim do governo Vargas (1954) e a construção de Brasília (JK, 1956–60), o Brasil vive euforia modernizante. Nas grandes cidades — Rio e São Paulo — o crescimento industrial muda hábitos de consumo e a vida cultural.</p>
+<section class="section slide" id="s2" style="background:var(--cream);color:var(--text);overflow:hidden;display:flex;flex-direction:column;">
+  <div style="flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr 1fr;gap:0;">
+    <div class="context-block reveal" style="padding:1.4rem 1.8rem;border-top:.5px solid rgba(0,0,0,.1);border-right:.5px solid rgba(0,0,0,.1);">
+      <h3 style="font-family:'Playfair Display',serif;font-size:1rem;color:var(--navy);margin-bottom:.6rem;display:flex;align-items:center;gap:10px;"><span style="display:inline-block;width:20px;height:2px;background:var(--gold);flex-shrink:0;"></span>Cenário histórico</h3>
+      <p style="font-size:.82rem;color:#5A5448;line-height:1.7;">Entre o fim do governo Vargas (1954) e a construção de Brasília (JK, 1956–60), o Brasil vive euforia modernizante. Nas grandes cidades — Rio e São Paulo — o crescimento industrial muda hábitos de consumo e a vida cultural.</p>
     </div>
-    <div class="context-block reveal">
-      <h3>O rádio no centro</h3>
-      <p>A Rádio Nacional do Rio de Janeiro domina o imaginário popular. Programas de auditório reúnem multidões. Cantoras como Emilinha Borba e Marlene são disputadas por fãs. O locutor é o rosto — ou a voz — de uma era.</p>
+    <div class="context-block reveal" style="padding:1.4rem 1.8rem;border-top:.5px solid rgba(0,0,0,.1);">
+      <h3 style="font-family:'Playfair Display',serif;font-size:1rem;color:var(--navy);margin-bottom:.6rem;display:flex;align-items:center;gap:10px;"><span style="display:inline-block;width:20px;height:2px;background:var(--gold);flex-shrink:0;"></span>O rádio no centro</h3>
+      <p style="font-size:.82rem;color:#5A5448;line-height:1.7;">A Rádio Nacional do Rio de Janeiro domina o imaginário popular. Programas de auditório reúnem multidões. Cantoras como Emilinha Borba e Marlene são disputadas por fãs. O locutor é o rosto — ou a voz — de uma era.</p>
     </div>
-    <div class="context-block reveal">
-      <h3>Moda feminina</h3>
-      <ul>
-        <li>New Look de Dior adaptado ao clima e orçamento brasileiro</li>
-        <li>Cintura marcada, saia midi godê ou lápis, corpete estruturado</li>
-        <li>Tecidos: cetim, organza, tule, crepe, voile</li>
-        <li>Luvas curtas obrigatórias em ocasiões sociais</li>
-        <li>Batom vermelho ou borgonha, permanente no cabelo</li>
-        <li>Acessórios: pérolas, broche, chapéu, scarpin bico fino</li>
+    <div class="context-block reveal" style="padding:1.4rem 1.8rem;border-top:.5px solid rgba(0,0,0,.1);border-right:.5px solid rgba(0,0,0,.1);">
+      <h3 style="font-family:'Playfair Display',serif;font-size:1rem;color:var(--navy);margin-bottom:.6rem;display:flex;align-items:center;gap:10px;"><span style="display:inline-block;width:20px;height:2px;background:var(--gold);flex-shrink:0;"></span>Moda feminina</h3>
+      <ul style="list-style:none;margin-top:.4rem;">
+        <li style="font-size:.8rem;color:#5A5448;padding:3px 0;border-bottom:.5px solid rgba(0,0,0,.06);display:flex;align-items:flex-start;gap:8px;"><span style="color:var(--gold);font-size:8px;margin-top:4px;flex-shrink:0;">◆</span>New Look de Dior adaptado ao clima e orçamento brasileiro</li>
+        <li style="font-size:.8rem;color:#5A5448;padding:3px 0;border-bottom:.5px solid rgba(0,0,0,.06);display:flex;align-items:flex-start;gap:8px;"><span style="color:var(--gold);font-size:8px;margin-top:4px;flex-shrink:0;">◆</span>Cintura marcada, saia midi godê ou lápis, corpete estruturado</li>
+        <li style="font-size:.8rem;color:#5A5448;padding:3px 0;border-bottom:.5px solid rgba(0,0,0,.06);display:flex;align-items:flex-start;gap:8px;"><span style="color:var(--gold);font-size:8px;margin-top:4px;flex-shrink:0;">◆</span>Tecidos: cetim, organza, tule, crepe, voile</li>
+        <li style="font-size:.8rem;color:#5A5448;padding:3px 0;border-bottom:.5px solid rgba(0,0,0,.06);display:flex;align-items:flex-start;gap:8px;"><span style="color:var(--gold);font-size:8px;margin-top:4px;flex-shrink:0;">◆</span>Batom vermelho ou borgonha, permanente no cabelo</li>
+        <li style="font-size:.8rem;color:#5A5448;padding:3px 0;display:flex;align-items:flex-start;gap:8px;"><span style="color:var(--gold);font-size:8px;margin-top:4px;flex-shrink:0;">◆</span>Acessórios: pérolas, broche, chapéu, scarpin bico fino</li>
       </ul>
     </div>
-    <div class="context-block reveal">
-      <h3>Moda masculina</h3>
-      <ul>
-        <li>Terno de dois botões, lapela estreita, ombros estruturados</li>
-        <li>Calça com dobra, em linho ou gabardine</li>
-        <li>Camisa social branca ou listrada, colarinho americano</li>
-        <li>Chapéu fedora de feltro ou panamá de palha no verão</li>
-        <li>Gravata de seda fina, alfinete ou prendedor</li>
-        <li>Cabelo gomado com risco lateral, bigode fino opcional</li>
+    <div class="context-block reveal" style="padding:1.4rem 1.8rem;border-top:.5px solid rgba(0,0,0,.1);">
+      <h3 style="font-family:'Playfair Display',serif;font-size:1rem;color:var(--navy);margin-bottom:.6rem;display:flex;align-items:center;gap:10px;"><span style="display:inline-block;width:20px;height:2px;background:var(--gold);flex-shrink:0;"></span>Moda masculina</h3>
+      <ul style="list-style:none;margin-top:.4rem;">
+        <li style="font-size:.8rem;color:#5A5448;padding:3px 0;border-bottom:.5px solid rgba(0,0,0,.06);display:flex;align-items:flex-start;gap:8px;"><span style="color:var(--gold);font-size:8px;margin-top:4px;flex-shrink:0;">◆</span>Terno de dois botões, lapela estreita, ombros estruturados</li>
+        <li style="font-size:.8rem;color:#5A5448;padding:3px 0;border-bottom:.5px solid rgba(0,0,0,.06);display:flex;align-items:flex-start;gap:8px;"><span style="color:var(--gold);font-size:8px;margin-top:4px;flex-shrink:0;">◆</span>Calça com dobra, em linho ou gabardine</li>
+        <li style="font-size:.8rem;color:#5A5448;padding:3px 0;border-bottom:.5px solid rgba(0,0,0,.06);display:flex;align-items:flex-start;gap:8px;"><span style="color:var(--gold);font-size:8px;margin-top:4px;flex-shrink:0;">◆</span>Camisa social branca ou listrada, colarinho americano</li>
+        <li style="font-size:.8rem;color:#5A5448;padding:3px 0;border-bottom:.5px solid rgba(0,0,0,.06);display:flex;align-items:flex-start;gap:8px;"><span style="color:var(--gold);font-size:8px;margin-top:4px;flex-shrink:0;">◆</span>Chapéu fedora de feltro ou panamá de palha no verão</li>
+        <li style="font-size:.8rem;color:#5A5448;padding:3px 0;display:flex;align-items:flex-start;gap:8px;"><span style="color:var(--gold);font-size:8px;margin-top:4px;flex-shrink:0;">◆</span>Gravata de seda fina, alfinete ou prendedor</li>
       </ul>
     </div>
-    <div class="context-block reveal">
-      <h3>Silhuetas femininas</h3>
-      <ul>
-        <li><strong>Vestido de auditório</strong> — saia rodada, corpete sem alça, tule</li>
-        <li><strong>Conjunto saia + blusa</strong> — uso cotidiano elegante, gola rendada</li>
-        <li><strong>Vestido tubinho</strong> — lápis midi, para mulher trabalhadora</li>
-        <li><strong>Traje de trabalho</strong> — saia discreta, blusa fechada, sem adornos</li>
+    <div class="context-block reveal" style="padding:1.4rem 1.8rem;border-top:.5px solid rgba(0,0,0,.1);border-right:.5px solid rgba(0,0,0,.1);">
+      <h3 style="font-family:'Playfair Display',serif;font-size:1rem;color:var(--navy);margin-bottom:.6rem;display:flex;align-items:center;gap:10px;"><span style="display:inline-block;width:20px;height:2px;background:var(--gold);flex-shrink:0;"></span>Silhuetas femininas</h3>
+      <ul style="list-style:none;margin-top:.4rem;">
+        <li style="font-size:.8rem;color:#5A5448;padding:3px 0;border-bottom:.5px solid rgba(0,0,0,.06);display:flex;align-items:flex-start;gap:8px;"><span style="color:var(--gold);font-size:8px;margin-top:4px;flex-shrink:0;">◆</span><span><strong>Vestido de auditório</strong> — saia rodada, corpete sem alça, tule</span></li>
+        <li style="font-size:.8rem;color:#5A5448;padding:3px 0;border-bottom:.5px solid rgba(0,0,0,.06);display:flex;align-items:flex-start;gap:8px;"><span style="color:var(--gold);font-size:8px;margin-top:4px;flex-shrink:0;">◆</span><span><strong>Conjunto saia + blusa</strong> — uso cotidiano elegante, gola rendada</span></li>
+        <li style="font-size:.8rem;color:#5A5448;padding:3px 0;border-bottom:.5px solid rgba(0,0,0,.06);display:flex;align-items:flex-start;gap:8px;"><span style="color:var(--gold);font-size:8px;margin-top:4px;flex-shrink:0;">◆</span><span><strong>Vestido tubinho</strong> — lápis midi, para mulher trabalhadora</span></li>
+        <li style="font-size:.8rem;color:#5A5448;padding:3px 0;display:flex;align-items:flex-start;gap:8px;"><span style="color:var(--gold);font-size:8px;margin-top:4px;flex-shrink:0;">◆</span><span><strong>Traje de trabalho</strong> — saia discreta, blusa fechada, sem adornos</span></li>
       </ul>
     </div>
-    <div class="context-block reveal">
-      <h3>Diferenças entre classes</h3>
-      <ul>
-        <li><strong>Alta:</strong> importados ou costureiras de atelier, joias verdadeiras</li>
-        <li><strong>Média:</strong> modas reproduzidas por costureiras locais, tecidos nacionais</li>
-        <li><strong>Popular:</strong> algodão, chitão, cores simples, sem adorno</li>
-        <li><strong>Profissionais técnicos:</strong> funcionalidade sobre estética, avental</li>
+    <div class="context-block reveal" style="padding:1.4rem 1.8rem;border-top:.5px solid rgba(0,0,0,.1);">
+      <h3 style="font-family:'Playfair Display',serif;font-size:1rem;color:var(--navy);margin-bottom:.6rem;display:flex;align-items:center;gap:10px;"><span style="display:inline-block;width:20px;height:2px;background:var(--gold);flex-shrink:0;"></span>Diferenças entre classes</h3>
+      <ul style="list-style:none;margin-top:.4rem;">
+        <li style="font-size:.8rem;color:#5A5448;padding:3px 0;border-bottom:.5px solid rgba(0,0,0,.06);display:flex;align-items:flex-start;gap:8px;"><span style="color:var(--gold);font-size:8px;margin-top:4px;flex-shrink:0;">◆</span><span><strong>Alta:</strong> importados ou costureiras de atelier, joias verdadeiras</span></li>
+        <li style="font-size:.8rem;color:#5A5448;padding:3px 0;border-bottom:.5px solid rgba(0,0,0,.06);display:flex;align-items:flex-start;gap:8px;"><span style="color:var(--gold);font-size:8px;margin-top:4px;flex-shrink:0;">◆</span><span><strong>Média:</strong> modas reproduzidas por costureiras locais, tecidos nacionais</span></li>
+        <li style="font-size:.8rem;color:#5A5448;padding:3px 0;border-bottom:.5px solid rgba(0,0,0,.06);display:flex;align-items:flex-start;gap:8px;"><span style="color:var(--gold);font-size:8px;margin-top:4px;flex-shrink:0;">◆</span><span><strong>Popular:</strong> algodão, chitão, cores simples, sem adorno</span></li>
+        <li style="font-size:.8rem;color:#5A5448;padding:3px 0;display:flex;align-items:flex-start;gap:8px;"><span style="color:var(--gold);font-size:8px;margin-top:4px;flex-shrink:0;">◆</span><span><strong>Profissionais técnicos:</strong> funcionalidade sobre estética, avental</span></li>
       </ul>
     </div>
   </div>
+</section>
 
-  <!-- Galeria de fotos de época -->
-  <div class="photo-showcase">
-    <div class="photo-showcase-title">Referências visuais da época</div>
-    <div class="photo-showcase-sub">Revistas, roupas, acessórios e fotografia</div>
-    <div class="photo-grid">
-      <div class="photo-slot reveal">
-        <img src="helena2.webp" alt="Helena de Lima, cantora de rádio dos anos 1950">
-        <div class="photo-placeholder"><div class="photo-placeholder-icon">📷</div><div class="photo-placeholder-label">Cantora de rádio<br>anos 1950 — BR</div></div>
-        <div class="photo-overlay"><div class="photo-overlay-text">Helena de Lima</div><div class="photo-overlay-source">Correio Paulistano, 1951</div></div>
-      </div>
-      <div class="photo-slot reveal">
-        <img src="revista_da_semana_rj.jpg" alt="Vestido de cetim, moda brasileira dos anos 1950">
-        <div class="photo-placeholder"><div class="photo-placeholder-icon">📷</div><div class="photo-placeholder-label">Vestido de cetim<br>moda brasileira 1950</div></div>
-        <div class="photo-overlay">
-          <div class="photo-overlay-text">Moda feminina</div>
-          <div class="photo-overlay-source">Revista da Semana, 1950</div>
-        </div>
-      </div>
-      <div class="photo-slot reveal">
-        <img src="terno_masculino.jpg" alt="Terno masculino, moda brasileira dos anos 1950">
-        <div class="photo-placeholder"><div class="photo-placeholder-icon">📷</div><div class="photo-placeholder-label">Terno masculino<br>locutor / apresentador</div></div>
-        <div class="photo-overlay"><div class="photo-overlay-text">Trajes masculino</div><div class="photo-overlay-source">Revista da Semana, 1953</div></div>
-      </div>
-      <div class="photo-slot reveal">
-        <img src="radio.jpeg" alt="Interior de estúdio de rádio dos anos 1950" style="object-position: 85% center;">
-        <div class="photo-placeholder"><div class="photo-placeholder-icon">📷</div><div class="photo-placeholder-label">Interior de estúdio<br>de rádio anos 1950</div></div>
-        <div class="photo-overlay"><div class="photo-overlay-text">Estúdio de rádio</div><div class="photo-overlay-source">Acervo UH</div></div>
-      </div>
-      <div class="photo-slot reveal">
-        <img src="marlene.jpeg" alt="Marlene, cantoras de rádio dos anos 1950" style="object-position: 50% 40%;">
-        <div class="photo-placeholder"><div class="photo-placeholder-icon">📷</div><div class="photo-placeholder-label">Marlene</div></div>
-        <div class="photo-overlay"><div class="photo-overlay-text">Referência de glamour</div><div class="photo-overlay-source">Revista Manchete, 1952</div></div>
-      </div>
-      <div class="photo-slot reveal">
-        <img src="revista da semana.jpg" alt="Revista da Semana, 1953" style="object-position: 10% center;">
-        <div class="photo-placeholder"><div class="photo-placeholder-icon">📷</div><div class="photo-placeholder-label">Revista</div></div>
-        <div class="photo-overlay"><div class="photo-overlay-text">Moda</div><div class="photo-overlay-source">Revista da Semana, 1953</div></div>
-      </div>
-      <div class="photo-slot reveal">
-        <img src="machete-1955.webp" alt="Capa da revista Manchete, 1955" style="object-position: 50% 40%;">
-        <div class="photo-placeholder"><div class="photo-placeholder-icon">📷</div><div class="photo-placeholder-label">Machete, 1955</div></div>
-        <div class="photo-overlay"><div class="photo-overlay-text">Capa da revista</div><div class="photo-overlay-source">Revista Manchete, 1955</div></div>
-      </div>
-      
+<!-- ══════════════════════════════════════
+     S2b — REFERÊNCIAS VISUAIS + CLASSES
+══════════════════════════════════════ -->
+<section class="section slide" id="s2b" style="background:var(--navy-dark);color:var(--cream);overflow:hidden;display:flex;flex-direction:column;">
+  <!-- Foto grid compacto no topo -->
+  <div style="flex:0 0 auto;padding:.8rem 1.5rem .4rem;display:flex;flex-direction:column;gap:.4rem;">
+    <div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(196,147,63,.6);text-align:center;">Referências visuais da época</div>
+    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;max-width:1200px;margin:0 auto;width:100%;">
+      <div class="photo-slot" style="aspect-ratio:3/4;border:2px solid rgba(245,237,216,.12);border-radius:2px;overflow:hidden;"><img src="helena2.webp" alt="Helena de Lima" style="width:100%;height:100%;object-fit:cover;filter:sepia(.3) contrast(1.1);"><div class="photo-overlay"><div class="photo-overlay-text">Helena de Lima</div><div class="photo-overlay-source">1951</div></div></div>
+      <div class="photo-slot" style="aspect-ratio:3/4;border:2px solid rgba(245,237,216,.12);border-radius:2px;overflow:hidden;"><img src="revista_da_semana_rj.jpg" alt="Moda feminina" style="width:100%;height:100%;object-fit:cover;filter:sepia(.3) contrast(1.1);"><div class="photo-overlay"><div class="photo-overlay-text">Moda feminina</div><div class="photo-overlay-source">Rev. Semana, 1950</div></div></div>
+      <div class="photo-slot" style="aspect-ratio:3/4;border:2px solid rgba(245,237,216,.12);border-radius:2px;overflow:hidden;"><img src="terno_masculino.jpg" alt="Terno masculino" style="width:100%;height:100%;object-fit:cover;filter:sepia(.3) contrast(1.1);"><div class="photo-overlay"><div class="photo-overlay-text">Trajes masculino</div><div class="photo-overlay-source">Rev. Semana, 1953</div></div></div>
+      <div class="photo-slot" style="aspect-ratio:3/4;border:2px solid rgba(245,237,216,.12);border-radius:2px;overflow:hidden;"><img src="radio.jpeg" alt="Estúdio de rádio" style="width:100%;height:100%;object-fit:cover;object-position:85% center;filter:sepia(.3) contrast(1.1);"><div class="photo-overlay"><div class="photo-overlay-text">Estúdio de rádio</div><div class="photo-overlay-source">Acervo UH</div></div></div>
+      <div class="photo-slot" style="aspect-ratio:3/4;border:2px solid rgba(245,237,216,.12);border-radius:2px;overflow:hidden;"><img src="marlene.jpeg" alt="Marlene" style="width:100%;height:100%;object-fit:cover;object-position:50% 40%;filter:sepia(.3) contrast(1.1);"><div class="photo-overlay"><div class="photo-overlay-text">Marlene</div><div class="photo-overlay-source">Manchete, 1952</div></div></div>
+      <div class="photo-slot" style="aspect-ratio:3/4;border:2px solid rgba(245,237,216,.12);border-radius:2px;overflow:hidden;"><img src="revista da semana.jpg" alt="Revista" style="width:100%;height:100%;object-fit:cover;object-position:10% center;filter:sepia(.3) contrast(1.1);"><div class="photo-overlay"><div class="photo-overlay-text">Moda</div><div class="photo-overlay-source">Rev. Semana, 1953</div></div></div>
+      <div class="photo-slot" style="aspect-ratio:3/4;border:2px solid rgba(245,237,216,.12);border-radius:2px;overflow:hidden;"><img src="machete-1955.webp" alt="Manchete 1955" style="width:100%;height:100%;object-fit:cover;object-position:50% 40%;filter:sepia(.3) contrast(1.1);"><div class="photo-overlay"><div class="photo-overlay-text">Capa da revista</div><div class="photo-overlay-source">Manchete, 1955</div></div></div>
     </div>
   </div>
-
-  <!-- Classes sociais -->
-  <div class="classes-section">
-    <h2 class="classes-title reveal">Moda por classe social</h2>
-    <div class="classes-sub reveal">Como o figurino comunica pertencimento nos anos 1950 brasileiros</div>
-    <div class="classes-grid">
-      <div class="class-card reveal">
-        <div class="class-card-header" style="background:var(--bordeaux);color:white">
-          <div class="class-card-dot" style="background:var(--gold)"></div>
-          <div>
-            <div class="class-card-title">Classe alta</div>
-            <div class="class-card-role">Elite social e artística</div>
-          </div>
-        </div>
-        <div class="class-photo-area" style="background:#E8D5C0;height:220px">
-          <div class="class-photo-placeholder">
-           <img src="dior.avif" alt="Ensaio New Look Dior, 1950s">
-          </div>
-        </div>
-        <div class="class-card-body">
-          <h4 style="color:var(--bordeaux)">Características visuais</h4>
-          <ul>
-            <li style="color:#3A2A20">Vestidos importados ou de atelier de alta costura</li>
-            <li style="color:#3A2A20">Joias verdadeiras — pérolas, diamantes, ouro</li>
-            <li style="color:#3A2A20">Tecidos nobres: cetim, organza, veludo</li>
-            <li style="color:#3A2A20">Luvas longas, chapéus elaborados</li>
-            <li style="color:#3A2A20">Perfume importado, maquiagem profissional</li>
-          </ul>
-        </div>
+  <!-- Divisor -->
+  <div style="height:1px;background:rgba(196,147,63,.15);flex-shrink:0;margin:0 1.5rem;"></div>
+  <!-- Classes sociais — 3 cards em linha -->
+  <div style="flex:1;min-height:0;display:grid;grid-template-columns:repeat(3,1fr);gap:0;">
+    <div style="display:flex;flex-direction:column;border-right:.5px solid rgba(196,147,63,.12);">
+      <div style="padding:.7rem 1.2rem;background:var(--bordeaux);display:flex;align-items:center;gap:10px;flex-shrink:0;">
+        <div style="width:8px;height:8px;border-radius:50%;background:var(--gold);flex-shrink:0;"></div>
+        <div><div style="font-family:'Playfair Display',serif;font-size:.95rem;font-weight:700;color:white;">Classe alta</div><div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.7);margin-top:1px;">Elite social e artística</div></div>
       </div>
-      <div class="class-card reveal">
-        <div class="class-card-header" style="background:var(--navy);color:white">
-          <div class="class-card-dot" style="background:var(--gold)"></div>
-          <div>
-            <div class="class-card-title">Classe média</div>
-            <div class="class-card-role">Profissionais urbanos</div>
-          </div>
-        </div>
-        <div class="class-photo-area" style="background:#D0D8E8;height:220px">
-          <div class="class-photo-placeholder">
-            
-            <img src="otelo.jpg" alt="Grande Otelo e Oscarito, atores de rádio dos anos 1950" style="object-position: 50% 40%;">
-          </div>
-        </div>
-        <div class="class-card-body">
-          <h4 style="color:var(--navy)">Características visuais</h4>
-          <ul>
-            <li style="color:#3A2A20">Modas reproduzidas por costureiras locais</li>
-            <li style="color:#3A2A20">Tecidos nacionais de boa qualidade: crepe, popelina</li>
-            <li style="color:#3A2A20">Poucas joias — bijuteria e pérolas falsas</li>
-            <li style="color:#3A2A20">Roupas bem conservadas, passadas com cuidado</li>
-            <li style="color:#3A2A20">Maquiagem discreta mas presente (batom, pó)</li>
-          </ul>
-        </div>
+      <div style="flex:1;min-height:0;overflow:hidden;position:relative;"><img src="dior.avif" alt="Dior 1950s" style="width:100%;height:100%;object-fit:cover;display:block;filter:sepia(.2) contrast(1.1);"></div>
+      <div style="padding:.8rem 1.2rem;background:rgba(122,28,46,.08);">
+        <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--bordeaux);margin-bottom:.5rem;">Características visuais</div>
+        <ul style="list-style:none;">
+          <li style="font-size:.78rem;color:rgba(245,237,216,.8);padding:2px 0;display:flex;gap:6px;align-items:flex-start;"><span style="color:var(--gold);flex-shrink:0;">→</span>Vestidos de atelier de alta costura, joias verdadeiras</li>
+          <li style="font-size:.78rem;color:rgba(245,237,216,.8);padding:2px 0;display:flex;gap:6px;align-items:flex-start;"><span style="color:var(--gold);flex-shrink:0;">→</span>Tecidos nobres: cetim, organza, veludo</li>
+          <li style="font-size:.78rem;color:rgba(245,237,216,.8);padding:2px 0;display:flex;gap:6px;align-items:flex-start;"><span style="color:var(--gold);flex-shrink:0;">→</span>Luvas longas, chapéus elaborados, perfume importado</li>
+        </ul>
       </div>
-      <div class="class-card reveal">
-        <div class="class-card-header" style="background:var(--teal);color:white">
-          <div class="class-card-dot" style="background:var(--gold)"></div>
-          <div>
-            <div class="class-card-title">Classe trabalhadora</div>
-            <div class="class-card-role">Operários e técnicos</div>
-          </div>
-        </div>
-        <div class="class-photo-area" style="background:#C8D8D0;height:220px">
-          <div class="class-photo-placeholder">
-            <img src="rio-40-graus.jpg" alt="Cena do filme Rio, 40 Graus, 1955" style="object-position: 90% center;">
-          </div>
-        </div>
-        <div class="class-card-body">
-          <h4 style="color:var(--teal)">Características visuais</h4>
-          <ul>
-            <li style="color:#3A2A20">Funcionalidade acima de tudo</li>
-            <li style="color:#3A2A20">Algodão simples, cores neutras ou escuras</li>
-            <li style="color:#3A2A20">Avental, jaleco ou uniforme de trabalho</li>
-            <li style="color:#3A2A20">Calçado resistente e fechado</li>
-            <li style="color:#3A2A20">Sem adornos — ou adornos guardados para a saída</li>
-          </ul>
-        </div>
+    </div>
+    <div style="display:flex;flex-direction:column;border-right:.5px solid rgba(196,147,63,.12);">
+      <div style="padding:.7rem 1.2rem;background:var(--navy);display:flex;align-items:center;gap:10px;flex-shrink:0;">
+        <div style="width:8px;height:8px;border-radius:50%;background:var(--gold);flex-shrink:0;"></div>
+        <div><div style="font-family:'Playfair Display',serif;font-size:.95rem;font-weight:700;color:white;">Classe média</div><div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.7);margin-top:1px;">Profissionais urbanos</div></div>
+      </div>
+      <div style="flex:1;min-height:0;overflow:hidden;position:relative;"><img src="classemedia.jpeg" alt="Grande Otelo" style="width:100%;height:100%;object-fit:cover;object-position:50% 70%;display:block;filter:sepia(.2) contrast(1.1);"></div>
+      <div style="padding:.8rem 1.2rem;background:rgba(26,39,68,.4);">
+        <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold-light);margin-bottom:.5rem;">Características visuais</div>
+        <ul style="list-style:none;">
+          <li style="font-size:.78rem;color:rgba(245,237,216,.8);padding:2px 0;display:flex;gap:6px;align-items:flex-start;"><span style="color:var(--gold);flex-shrink:0;">→</span>Modas reproduzidas por costureiras locais</li>
+          <li style="font-size:.78rem;color:rgba(245,237,216,.8);padding:2px 0;display:flex;gap:6px;align-items:flex-start;"><span style="color:var(--gold);flex-shrink:0;">→</span>Tecidos nacionais: crepe, popelina, bijuteria</li>
+          <li style="font-size:.78rem;color:rgba(245,237,216,.8);padding:2px 0;display:flex;gap:6px;align-items:flex-start;"><span style="color:var(--gold);flex-shrink:0;">→</span>Roupas bem conservadas, maquiagem discreta</li>
+        </ul>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;">
+      <div style="padding:.7rem 1.2rem;background:var(--teal);display:flex;align-items:center;gap:10px;flex-shrink:0;">
+        <div style="width:8px;height:8px;border-radius:50%;background:var(--gold);flex-shrink:0;"></div>
+        <div><div style="font-family:'Playfair Display',serif;font-size:.95rem;font-weight:700;color:white;">Classe trabalhadora</div><div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.7);margin-top:1px;">Operários e técnicos</div></div>
+      </div>
+      <div style="flex:1;min-height:0;overflow:hidden;position:relative;"><img src="operarios.webp" alt="Rio 40 Graus" style="width:100%;height:100%;object-fit:cover;object-position:80% left;top:-20%;display:block;filter:sepia(.2) contrast(1.1);"></div>
+      <div style="padding:.8rem 1.2rem;background:rgba(43,107,107,.2);">
+        <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#7FBFBF;margin-bottom:.5rem;">Características visuais</div>
+        <ul style="list-style:none;">
+          <li style="font-size:.78rem;color:rgba(245,237,216,.8);padding:2px 0;display:flex;gap:6px;align-items:flex-start;"><span style="color:var(--gold);flex-shrink:0;">→</span>Funcionalidade acima de tudo, algodão simples</li>
+          <li style="font-size:.78rem;color:rgba(245,237,216,.8);padding:2px 0;display:flex;gap:6px;align-items:flex-start;"><span style="color:var(--gold);flex-shrink:0;">→</span>Avental, jaleco ou uniforme de trabalho</li>
+          <li style="font-size:.78rem;color:rgba(245,237,216,.8);padding:2px 0;display:flex;gap:6px;align-items:flex-start;"><span style="color:var(--gold);flex-shrink:0;">→</span>Sem adornos — ou guardados para a saída</li>
+        </ul>
       </div>
     </div>
   </div>
@@ -1064,82 +1151,66 @@ body::before{
 <div class="stripe-transition cream-to-navy"></div>
 
 <!-- ══════════════════════════════════════
-     S3 — MOODBOARD
+     S3 — PAINEL CINEMATOGRÁFICO
 ══════════════════════════════════════ -->
-<section class="section" id="s3" style="background:#1a1208;padding:5rem 2rem 4rem">
-  <div class="mood-header">
-    <span class="section-eyebrow">Etapa 3</span>
-    <h2 class="mood-title">Painel <em style="color:var(--gold)">Cinematográfico</em></h2>
-    <div class="mood-sub">Referências audiovisuais brasileiras dos anos 1950</div>
-  </div>
-
-  <!-- Moodboard estilo polaroids sobrepostos -->
-  <div style="max-width:1200px;margin:0 auto;position:relative">
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:auto auto;gap:16px">
-
-      <div class="photo-slot reveal" style="aspect-ratio:3/4;transform:rotate(-2.5deg);border:4px solid rgba(245,237,216,.15)">
-        <img src="sinha.jpg" >
-        <div class="photo-overlay">
-          <div class="photo-overlay-text">Sinhá Moça</div>
-          <div class="photo-overlay-source">1953</div>
-        </div>
-      </div>
-
-      <div class="photo-slot reveal" style="aspect-ratio:3/4;transform:rotate(1.8deg);border:4px solid rgba(245,237,216,.15)">
-        <img src="absolutamente-certo.jpg" style="object-position: 78% center;">
-        <div class="photo-overlay">
-          <div class="photo-overlay-text">Absolutamente Certo</div>
-          <div class="photo-overlay-source">1957</div>
-        </div>
-      </div>
-
-      <div class="photo-slot reveal" style="aspect-ratio:3/4;transform:rotate(-1.2deg);border:4px solid rgba(245,237,216,.15)">
-        <img src="amar-foi.jpg" style="object-position: 35% center;">
-        <div class="photo-overlay">
-          <div class="photo-overlay-text">Amar Foi Minha Ruína</div>
-          <div class="photo-overlay-source">1945</div>
-        </div>
-      </div>
-
-      <div class="photo-slot reveal" style="aspect-ratio:3/4;transform:rotate(2.3deg);border:4px solid rgba(245,237,216,.15)">
-        <img src="tico.jpg">
-        <div class="photo-overlay">
-          <div class="photo-overlay-text">Tico tico no fubá</div>
-          <div class="photo-overlay-source">1952</div>
-        </div>
-      </div>
-
-      <div class="photo-slot reveal" style="aspect-ratio:4/3;grid-column:1/3;transform:rotate(-.8deg);border:4px solid rgba(245,237,216,.15)">
-        <img src="rio.jpg">
-        <div class="photo-overlay">
-          <div class="photo-overlay-text">Rio 40 Graus</div>
-          <div class="photo-overlay-source">1955</div>
-        </div>
-      </div>
-
-      <div class="photo-slot reveal" style="aspect-ratio:4/3;grid-column:3/5;transform:rotate(1.1deg);border:4px solid rgba(245,237,216,.15)">
-       <img src="otelo2.jpg">
-       <div class="photo-overlay">
-          <div class="photo-overlay-text">Grande Otelo e Oscarito nas chanchadas</div>
-          <div class="photo-overlay-source">1949</div>
-        </div>
-      </div>
-
+<section class="section slide" id="s3" style="background:#1a1208;padding:0;overflow:hidden;display:flex;flex-direction:column;">
+  <div style="flex:1;min-height:0;display:flex;flex-direction:column;padding:1.2rem 1.5rem 1rem;">
+    <!-- Título compacto -->
+    <div style="text-align:center;margin-bottom:.8rem;flex-shrink:0;">
+      <div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(196,147,63,.5);">Etapa 3 — Referências audiovisuais brasileiras dos anos 1950</div>
     </div>
-  </div>
-
-  <!-- Paleta do roteiro -->
-  <div class="palette-strip" style="margin-top:4rem;border-radius:4px;max-width:1200px;margin:4rem auto 0">
-    <h3>Paleta de cores do roteiro</h3>
-    <div class="palette-row-big">
-      <div class="palette-swatch-big" style="background:#1A2744"><span style="color:rgba(245,237,216,.7)">Azul marinho</span></div>
-      <div class="palette-swatch-big" style="background:#7A1C2E"><span style="color:rgba(245,237,216,.7)">Bordô</span></div>
-      <div class="palette-swatch-big" style="background:#2B6B6B"><span style="color:rgba(245,237,216,.7)">Esmeralda</span></div>
-      <div class="palette-swatch-big" style="background:#C4933F"><span style="color:rgba(13,24,48,.8)">Dourado</span></div>
-      <div class="palette-swatch-big" style="background:#8B3A2A"><span style="color:rgba(245,237,216,.7)">Ferrugem</span></div>
-      <div class="palette-swatch-big" style="background:#F5EDD8"><span style="color:rgba(26,39,68,.7)">Marfim</span></div>
-      <div class="palette-swatch-big" style="background:#888780"><span style="color:rgba(245,237,216,.7)">Cinza médio</span></div>
-      <div class="palette-swatch-big" style="background:#2C2C2A"><span style="color:rgba(245,237,216,.6)">Carvão</span></div>
+    <!-- Grid de fotos compacto -->
+    <div style="
+  flex:1;
+  min-height:0;
+  display:grid;
+  grid-template-columns:repeat(4,180px);
+  grid-template-rows:240px 240px;
+  justify-content:center;
+  align-content:center;
+  gap:12px;
+  max-width:1200px;
+  margin:0 auto;
+  width:100%;
+">
+      <div class="photo-slot" style="border:3px solid rgba(245,237,216,.12);overflow:hidden;border-radius:2px;transform:rotate(-2deg);">
+        <img src="sinha.jpg" style="width:100%;height:100%;object-fit:cover;display:block;">
+        <div class="photo-overlay"><div class="photo-overlay-text">Sinhá Moça</div><div class="photo-overlay-source">1953</div></div>
+      </div>
+      <div class="photo-slot" style="border:3px solid rgba(245,237,216,.12);overflow:hidden;border-radius:2px;transform:rotate(1.5deg);">
+        <img src="absolutamente-certo.jpg" style="width:100%;height:100%;object-fit:cover;object-position:78% center;display:block;">
+        <div class="photo-overlay"><div class="photo-overlay-text">Absolutamente Certo</div><div class="photo-overlay-source">1957</div></div>
+      </div>
+      <div class="photo-slot" style="border:3px solid rgba(245,237,216,.12);overflow:hidden;border-radius:2px;transform:rotate(-1deg);">
+        <img src="amar-foi.jpg" style="width:100%;height:100%;object-fit:cover;object-position:35% center;display:block;">
+        <div class="photo-overlay"><div class="photo-overlay-text">Amar Foi Minha Ruína</div><div class="photo-overlay-source">1945</div></div>
+      </div>
+      <div class="photo-slot" style="border:3px solid rgba(245,237,216,.12);overflow:hidden;border-radius:2px;transform:rotate(2deg);">
+        <img src="tico.jpg" style="width:100%;height:100%;object-fit:cover;display:block;">
+        <div class="photo-overlay"><div class="photo-overlay-text">Tico tico no fubá</div><div class="photo-overlay-source">1952</div></div>
+      </div>
+      <div class="photo-slot" style="border:3px solid rgba(245,237,216,.12);overflow:hidden;border-radius:2px;grid-column:1/3;height: 290px;width: 340px;transform:rotate(-.5deg);">
+        <img src="rio.jpg" style="width:100%;height:100%;object-fit:cover;display:block;">
+        <div class="photo-overlay"><div class="photo-overlay-text">Rio 40 Graus</div><div class="photo-overlay-source">1955</div></div>
+      </div>
+      <div class="photo-slot" style="border:3px solid rgba(245,237,216,.12);overflow:hidden;border-radius:2px;grid-column:3/5;height: 290px;width: 340px;transform:rotate(1deg);">
+        <img src="otelo2.jpg" style="width:100%;height:100%;object-fit:cover;display:block;">
+        <div class="photo-overlay"><div class="photo-overlay-text">Grande Otelo e Oscarito nas chanchadas</div><div class="photo-overlay-source">1949</div></div>
+      </div>
+    </div>
+    <!-- Paleta integrada abaixo -->
+    <div style="flex-shrink:0;margin-top:.8rem;display:flex;flex-direction:column;align-items:center;gap:.5rem;">
+      <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(196,147,63,.5);">Paleta de cores do roteiro</div>
+      <div style="display:flex;width:100%;max-width:800px;border-radius:3px;overflow:hidden;height:44px;">
+        <div style="flex:1;background:#1A2744;display:flex;align-items:flex-end;padding:5px 6px;cursor:default;transition:flex .3s;" onmouseenter="this.style.flex='2.5'" onmouseleave="this.style.flex='1'"><span style="font-size:8px;letter-spacing:1px;text-transform:uppercase;color:rgba(245,237,216,.65);white-space:nowrap;overflow:hidden;">Marinho</span></div>
+        <div style="flex:1;background:#7A1C2E;display:flex;align-items:flex-end;padding:5px 6px;cursor:default;transition:flex .3s;" onmouseenter="this.style.flex='2.5'" onmouseleave="this.style.flex='1'"><span style="font-size:8px;letter-spacing:1px;text-transform:uppercase;color:rgba(245,237,216,.65);white-space:nowrap;overflow:hidden;">Bordô</span></div>
+        <div style="flex:1;background:#2B6B6B;display:flex;align-items:flex-end;padding:5px 6px;cursor:default;transition:flex .3s;" onmouseenter="this.style.flex='2.5'" onmouseleave="this.style.flex='1'"><span style="font-size:8px;letter-spacing:1px;text-transform:uppercase;color:rgba(245,237,216,.65);white-space:nowrap;overflow:hidden;">Esmeralda</span></div>
+        <div style="flex:1;background:#C4933F;display:flex;align-items:flex-end;padding:5px 6px;cursor:default;transition:flex .3s;" onmouseenter="this.style.flex='2.5'" onmouseleave="this.style.flex='1'"><span style="font-size:8px;letter-spacing:1px;text-transform:uppercase;color:rgba(13,24,48,.75);white-space:nowrap;overflow:hidden;">Dourado</span></div>
+        <div style="flex:1;background:#8B3A2A;display:flex;align-items:flex-end;padding:5px 6px;cursor:default;transition:flex .3s;" onmouseenter="this.style.flex='2.5'" onmouseleave="this.style.flex='1'"><span style="font-size:8px;letter-spacing:1px;text-transform:uppercase;color:rgba(245,237,216,.65);white-space:nowrap;overflow:hidden;">Ferrugem</span></div>
+        <div style="flex:1;background:#F5EDD8;display:flex;align-items:flex-end;padding:5px 6px;cursor:default;transition:flex .3s;" onmouseenter="this.style.flex='2.5'" onmouseleave="this.style.flex='1'"><span style="font-size:8px;letter-spacing:1px;text-transform:uppercase;color:rgba(26,39,68,.65);white-space:nowrap;overflow:hidden;">Marfim</span></div>
+        <div style="flex:1;background:#888780;display:flex;align-items:flex-end;padding:5px 6px;cursor:default;transition:flex .3s;" onmouseenter="this.style.flex='2.5'" onmouseleave="this.style.flex='1'"><span style="font-size:8px;letter-spacing:1px;text-transform:uppercase;color:rgba(245,237,216,.65);white-space:nowrap;overflow:hidden;">Cinza</span></div>
+        <div style="flex:1;background:#2C2C2A;display:flex;align-items:flex-end;padding:5px 6px;cursor:default;transition:flex .3s;" onmouseenter="this.style.flex='2.5'" onmouseleave="this.style.flex='1'"><span style="font-size:8px;letter-spacing:1px;text-transform:uppercase;color:rgba(245,237,216,.55);white-space:nowrap;overflow:hidden;">Carvão</span></div>
+      </div>
     </div>
   </div>
 </section>
@@ -1150,11 +1221,7 @@ body::before{
 <!-- ══════════════════════════════════════
      S4 — PERSONAGENS
 ══════════════════════════════════════ -->
-<section class="section" id="s4" style="background:var(--navy)">
-  <div style="text-align:center;padding:4rem 2rem 2rem">
-    <span class="section-eyebrow">Etapa 4</span>
-    <h2 class="section-title-big" style="color:var(--cream)">Fichas de <em style="color:var(--gold)">figurino</em></h2>
-  </div>
+<section class="section slide" id="s4" style="background:var(--navy);display:flex;flex-direction:column;">
 
   <div class="chars-nav">
     <button class="char-tab-btn active" data-name="Celina" onclick="showChar('celina',this)">cantora</button>
@@ -1383,12 +1450,8 @@ body::before{
 <!-- ══════════════════════════════════════
      S5 — COMPARATIVO
 ══════════════════════════════════════ -->
-<section class="section" id="s5" style="background:var(--navy-dark);padding:5rem 2rem">
-  <div class="comp-header reveal">
-    <span class="section-eyebrow">Etapa 5</span>
-    <h2 class="section-title-big" style="color:var(--cream)">Comparativo dos <em style="color:var(--gold)">personagens</em></h2>
-    <p class="section-lead" style="color:rgba(245,237,216,.6)">Como os quatro figurinos se diferenciam visual e narrativamente</p>
-  </div>
+<section class="section slide" id="s5" style="background:var(--navy-dark);padding:0;overflow:hidden;display:flex;flex-direction:column;">
+  <div style="flex:1;min-height:0;overflow-y:auto;padding:2rem 2rem 1.5rem;">
  
   <div class="comp-four">
     <div class="comp-char-card reveal" style="background:linear-gradient(to bottom,#3D0E17,#1A2744)">
@@ -1479,67 +1542,67 @@ body::before{
       </tbody>
     </table>
   </div>
+  </div><!-- /inner scroll -->
 </section>
  
 <!-- Transição 5→6 -->
 <div style="height:80px;background:linear-gradient(to bottom right,var(--navy-dark) 49.5%,var(--cream) 50%)"></div>
  
 <!-- ══════════════════════════════════════
-     S6 — PRODUÇÃO
+     S6a — PRODUÇÃO: CELINA + ORLANDO
 ══════════════════════════════════════ -->
-<section class="section" id="s6" style="background:var(--cream);color:var(--text);padding:5rem 2rem">
-  <div class="prod-header reveal">
-    <span class="section-eyebrow" style="color:var(--gold)">Etapa 6</span>
-    <h2 class="section-title-big">Planejamento de <em style="color:var(--bordeaux)">produção</em></h2>
-    <p class="section-lead">Soluções práticas para montar os figurinos com recursos limitados</p>
-  </div>
- 
-  <div class="prod-four">
-    <div class="prod-card reveal">
-      <div class="prod-card-header" style="background:var(--bordeaux)">
+<section class="section slide" id="s6" style="background:var(--cream);color:var(--text);padding:0;overflow:hidden;display:flex;flex-direction:column;">
+  <div style="flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr;gap:0;">
+    <div class="prod-card" style="border:.5px solid rgba(0,0,0,.1);border-radius:0;display:flex;flex-direction:column;">
+      <div class="prod-card-header" style="background:var(--bordeaux);flex-shrink:0;">
         <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:white;flex-shrink:0">C</div>
         <h3 style="color:white">Celina</h3>
       </div>
-      <div class="prod-card-body">
+      <div class="prod-card-body" style="flex:1;overflow-y:auto;">
         <div class="prod-cat"><span class="prod-badge brechó">Brechó</span><div class="prod-items">Vestido de baile anos 1950–60 em cetim ou tafetá; luvas de renda; scarpin vintage bico fino</div></div>
         <div class="prod-cat"><span class="prod-badge acervo">Acervo pessoal</span><div class="prod-items">Colar de pérolas plásticas; broche dourado; brincos de pressão</div></div>
         <div class="prod-cat"><span class="prod-badge adapt">Adaptação</span><div class="prod-items">Bolero de voile dourado costurado no caimento; vestido tingido em bordô se necessário</div></div>
         <div class="prod-cat"><span class="prod-badge nota">Continuidade</span><div class="prod-items">Fotografar posição exata do broche e luvas antes de cada tomada</div></div>
       </div>
     </div>
- 
-    <div class="prod-card reveal">
-      <div class="prod-card-header" style="background:var(--navy)">
+    <div class="prod-card" style="border:.5px solid rgba(0,0,0,.1);border-left:none;border-radius:0;display:flex;flex-direction:column;">
+      <div class="prod-card-header" style="background:var(--navy);flex-shrink:0;">
         <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:white;flex-shrink:0">O</div>
         <h3 style="color:white">Orlando</h3>
       </div>
-      <div class="prod-card-body">
+      <div class="prod-card-body" style="flex:1;overflow-y:auto;">
         <div class="prod-cat"><span class="prod-badge brechó">Brechó</span><div class="prod-items">Terno de dois botões (evitar lapela larga anos 70–80); gravata de seda estreita; chapéu fedora cinza</div></div>
         <div class="prod-cat"><span class="prod-badge acervo">Acervo pessoal</span><div class="prod-items">Camisa branca social; lenço de bolso branco; sapato oxford marrom ou preto</div></div>
         <div class="prod-cat"><span class="prod-badge adapt">Adaptação</span><div class="prod-items">Abotoaduras douradas em sapataria; gomina para pentear; bigode postiço se necessário</div></div>
         <div class="prod-cat"><span class="prod-badge nota">Dificuldade</span><div class="prod-items">Lapela do terno deve ser estreita — evitar anos 1970. Verificar antes da compra.</div></div>
       </div>
     </div>
- 
-    <div class="prod-card reveal">
-      <div class="prod-card-header" style="background:var(--teal)">
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     S6b — PRODUÇÃO: NAIR + JÚLIO + AVISO
+══════════════════════════════════════ -->
+<section class="section slide" id="s6b" style="background:var(--cream);color:var(--text);padding:0;overflow:hidden;display:flex;flex-direction:column;">
+  <div style="flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr;gap:0;">
+    <div class="prod-card" style="border:.5px solid rgba(0,0,0,.1);border-radius:0;display:flex;flex-direction:column;">
+      <div class="prod-card-header" style="background:var(--teal);flex-shrink:0;">
         <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:white;flex-shrink:0">N</div>
         <h3 style="color:white">Nair</h3>
       </div>
-      <div class="prod-card-body">
+      <div class="prod-card-body" style="flex:1;overflow-y:auto;">
         <div class="prod-cat"><span class="prod-badge acervo">Acervo pessoal</span><div class="prod-items">Saia lápis midi neutra; blusa de mangas compridas discreta</div></div>
         <div class="prod-cat"><span class="prod-badge brechó">Brechó</span><div class="prod-items">Jaleco de algodão ou avental; óculos armação redonda fina; sapato fechado baixo</div></div>
         <div class="prod-cat"><span class="prod-badge adapt">Adaptação</span><div class="prod-items">Tingir blusa em azul-esverdeado apagado; envelhecer jaleco com chá preto</div></div>
         <div class="prod-cat"><span class="prod-badge nota">Ponto forte</span><div class="prod-items">Figurino mais fácil de manter em continuidade — sem adornos que se perdem entre tomadas</div></div>
       </div>
     </div>
- 
-    <div class="prod-card reveal">
-      <div class="prod-card-header" style="background:var(--rust)">
+    <div class="prod-card" style="border:.5px solid rgba(0,0,0,.1);border-left:none;border-radius:0;display:flex;flex-direction:column;">
+      <div class="prod-card-header" style="background:var(--rust);flex-shrink:0;">
         <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:white;flex-shrink:0">J</div>
         <h3 style="color:white">Júlio</h3>
       </div>
-      <div class="prod-card-body">
+      <div class="prod-card-body" style="flex:1;overflow-y:auto;">
         <div class="prod-cat"><span class="prod-badge acervo">Acervo pessoal</span><div class="prod-items">Calça social bege ou cinza; paletó de linho de qualquer época</div></div>
         <div class="prod-cat"><span class="prod-badge brechó">Brechó</span><div class="prod-items">Camisa xadrez manga comprida; suspensório de couro; oxford marrom simples</div></div>
         <div class="prod-cat"><span class="prod-badge adapt">Adereços</span><div class="prod-items">Caneta tinteiro antiga ou réplica; bloco de notas amarelado; mínima gomina no cabelo</div></div>
@@ -1547,10 +1610,8 @@ body::before{
       </div>
     </div>
   </div>
- 
-  <div class="ia-warning reveal">
-    <strong>⚠ Erros comuns das imagens geradas por IA — o que corrigir:</strong><br>
-    A IA pode inserir: lapela larga dos anos 1970, tênis ou calçados modernos, maquiagem dos anos 1980 (delineador exagerado), volume de cabelo estilo anos 80, tecidos sintéticos brilhosos de décadas posteriores, ou penteados com babyliss. Caso ocorra, use o prompt de refinamento especificando Brasil 1950–1958 e citando referências como Emilinha Borba, Marlene ou atores do cinema nacional da época.
+  <div class="ia-warning" style="flex-shrink:0;margin:0;border-radius:0;border-left:none;border-right:none;border-bottom:none;font-size:.8rem;padding:1rem 1.5rem;">
+    <strong>⚠ Erros comuns das imagens geradas por IA — o que corrigir:</strong> A IA pode inserir lapela larga dos anos 1970, tênis ou calçados modernos, maquiagem dos anos 1980, volume de cabelo estilo anos 80, tecidos sintéticos brilhosos, ou penteados com babyliss. Use o prompt de refinamento especificando Brasil 1950–1958 e citando Emilinha Borba, Marlene ou atores do cinema nacional.
   </div>
 </section>
  
@@ -1560,112 +1621,285 @@ body::before{
 <!-- ══════════════════════════════════════
      S7 — REFERÊNCIAS
 ══════════════════════════════════════ -->
-<section class="section" id="s7" style="background:var(--navy);padding:5rem 2rem 3rem">
-  <div class="refs-header reveal">
-    <span class="section-eyebrow">Referências</span>
-    <h2 class="section-title-big" style="color:var(--cream)">Fontes <em style="color:var(--gold)">consultadas</em></h2>
-  </div>
- 
-  <div class="refs-cols">
-    <div class="refs-group reveal">
-      <h3>Cinema e audiovisual</h3>
-      <div class="ref-entry"><strong>Absolutamente Certo! (1957)</strong><span>Dir. Anselmo Duarte — moda de estúdio de rádio paulistana</span></div>
-      <div class="ref-entry"><strong>Rio 40 Graus (1955)</strong><span>Dir. Nelson Pereira dos Santos — cotidiano carioca, classes populares</span></div>
-      <div class="ref-entry"><strong>Amar foi minha ruína (1954)</strong><span>Melodrama nacional — figurinos femininos de época</span></div>
-      <div class="ref-entry"><strong>Grande Otelo e Oscarito nas chanchadas (1958)</strong><span>Chanchadas da Atlântida — moda masculina popular</span></div>
+<section class="section slide" id="s7" style="background:var(--navy);padding:0;overflow:hidden;display:flex;flex-direction:column;">
+  <!-- refs grid -->
+  <div style="flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:0;padding:1.5rem;gap:1rem;">
+    <div class="refs-group" style="border:.5px solid rgba(196,147,63,.15);border-radius:3px;padding:.9rem 1rem;display:flex;flex-direction:column;gap:.4rem;">
+      <h3 style="font-size:.65rem;letter-spacing:3px;text-transform:uppercase;color:var(--gold);border-left:2px solid var(--gold);padding-left:8px;margin-bottom:.3rem;">Cinema e audiovisual</h3>
+      <div class="ref-entry" style="padding:4px 0;border-bottom:.5px solid rgba(196,147,63,.1);"><strong style="font-size:.8rem;color:var(--cream);">Absolutamente Certo! (1957)</strong><span style="display:block;font-size:.73rem;color:rgba(245,237,216,.5);">Dir. Anselmo Duarte — moda de estúdio de rádio paulistana</span></div>
+      <div class="ref-entry" style="padding:4px 0;border-bottom:.5px solid rgba(196,147,63,.1);"><strong style="font-size:.8rem;color:var(--cream);">Rio 40 Graus (1955)</strong><span style="display:block;font-size:.73rem;color:rgba(245,237,216,.5);">Dir. Nelson Pereira dos Santos — cotidiano carioca, classes populares</span></div>
+      <div class="ref-entry" style="padding:4px 0;border-bottom:.5px solid rgba(196,147,63,.1);"><strong style="font-size:.8rem;color:var(--cream);">Amar foi minha ruína (1954)</strong><span style="display:block;font-size:.73rem;color:rgba(245,237,216,.5);">Melodrama nacional — figurinos femininos de época</span></div>
+      <div class="ref-entry" style="padding:4px 0;"><strong style="font-size:.8rem;color:var(--cream);">Grande Otelo e Oscarito nas chanchadas (1958)</strong><span style="display:block;font-size:.73rem;color:rgba(245,237,216,.5);">Chanchadas da Atlântida — moda masculina popular</span></div>
     </div>
-    <div class="refs-group reveal">
-      <h3>Acervos digitais</h3>
-      <div class="ref-entry"><strong>Museu da Imagem e do Som do Paraná</strong><span>www.mis.pr.gov.br/Pagina/Acervo-Fotografico-e-Documental </span></div>
-      <div class="ref-entry"><strong>Memórias Cinematográficas</strong><span>www.memoriascinematograficas.com.br </span></div>
-      <div class="ref-entry"><strong>Museu Paulista da Universidade de São Paulo</strong><span>http://acervo.mp.usp.br/Home.html </span></div>
-      
+    <div class="refs-group" style="border:.5px solid rgba(196,147,63,.15);border-radius:3px;padding:.9rem 1rem;display:flex;flex-direction:column;gap:.4rem;">
+      <h3 style="font-size:.65rem;letter-spacing:3px;text-transform:uppercase;color:var(--gold);border-left:2px solid var(--gold);padding-left:8px;margin-bottom:.3rem;">Acervos digitais</h3>
+      <div class="ref-entry" style="padding:4px 0;border-bottom:.5px solid rgba(196,147,63,.1);"><strong style="font-size:.8rem;color:var(--cream);">Museu da Imagem e do Som do Paraná</strong><span style="display:block;font-size:.73rem;color:rgba(245,237,216,.5);">www.mis.pr.gov.br/Pagina/Acervo-Fotografico-e-Documental</span></div>
+      <div class="ref-entry" style="padding:4px 0;border-bottom:.5px solid rgba(196,147,63,.1);"><strong style="font-size:.8rem;color:var(--cream);">Memórias Cinematográficas</strong><span style="display:block;font-size:.73rem;color:rgba(245,237,216,.5);">www.memoriascinematograficas.com.br</span></div>
+      <div class="ref-entry" style="padding:4px 0;"><strong style="font-size:.8rem;color:var(--cream);">Museu Paulista da USP</strong><span style="display:block;font-size:.73rem;color:rgba(245,237,216,.5);">acervo.mp.usp.br</span></div>
     </div>
-    <div class="refs-group reveal">
-      <h3>Revistas e imprensa</h3>
-      <div class="ref-entry"><strong>Revista O Cruzeiro (1950–1958)</strong><span>Hemeroteca Digital BN — moda, publicidade, celebridades</span></div>
-      <div class="ref-entry"><strong>Revista Manchete (1952–1958)</strong><span>Fotojornalismo e vida social carioca</span></div>
-      <div class="ref-entry"><strong>Revista da Semana (1950-1955) </strong><span>Moda, fotojornalistmo, anúncios e noticías</span></div>
-
+    <div class="refs-group" style="border:.5px solid rgba(196,147,63,.15);border-radius:3px;padding:.9rem 1rem;display:flex;flex-direction:column;gap:.4rem;">
+      <h3 style="font-size:.65rem;letter-spacing:3px;text-transform:uppercase;color:var(--gold);border-left:2px solid var(--gold);padding-left:8px;margin-bottom:.3rem;">Revistas e imprensa</h3>
+      <div class="ref-entry" style="padding:4px 0;border-bottom:.5px solid rgba(196,147,63,.1);"><strong style="font-size:.8rem;color:var(--cream);">Revista O Cruzeiro (1950–1958)</strong><span style="display:block;font-size:.73rem;color:rgba(245,237,216,.5);">Hemeroteca Digital BN — moda, publicidade, celebridades</span></div>
+      <div class="ref-entry" style="padding:4px 0;border-bottom:.5px solid rgba(196,147,63,.1);"><strong style="font-size:.8rem;color:var(--cream);">Revista Manchete (1952–1958)</strong><span style="display:block;font-size:.73rem;color:rgba(245,237,216,.5);">Fotojornalismo e vida social carioca</span></div>
+      <div class="ref-entry" style="padding:4px 0;"><strong style="font-size:.8rem;color:var(--cream);">Revista da Semana (1950–1955)</strong><span style="display:block;font-size:.73rem;color:rgba(245,237,216,.5);">Moda, fotojornalismo, anúncios e notícias</span></div>
     </div>
-    <div class="refs-group reveal">
-      <h3>Personalidades e moda</h3>
-      <div class="ref-entry"><strong>Emilinha Borba</strong><span>Cantora da Rádio Nacional — referência de glamour e figurino de auditório</span></div>
-      <div class="ref-entry"><strong>Marlene &amp; Dolores Duran</strong><span>Elegância urbana feminina nos anos 1950</span></div>
-      <div class="ref-entry"><strong>Christian Dior — New Look</strong><span>musee-dior-granville.com — silhuetas dos anos 1950</span></div>
-     
+    <div class="refs-group" style="border:.5px solid rgba(196,147,63,.15);border-radius:3px;padding:.9rem 1rem;display:flex;flex-direction:column;gap:.4rem;">
+      <h3 style="font-size:.65rem;letter-spacing:3px;text-transform:uppercase;color:var(--gold);border-left:2px solid var(--gold);padding-left:8px;margin-bottom:.3rem;">Personalidades e moda</h3>
+      <div class="ref-entry" style="padding:4px 0;border-bottom:.5px solid rgba(196,147,63,.1);"><strong style="font-size:.8rem;color:var(--cream);">Emilinha Borba</strong><span style="display:block;font-size:.73rem;color:rgba(245,237,216,.5);">Cantora da Rádio Nacional — referência de glamour e figurino de auditório</span></div>
+      <div class="ref-entry" style="padding:4px 0;border-bottom:.5px solid rgba(196,147,63,.1);"><strong style="font-size:.8rem;color:var(--cream);">Marlene &amp; Dolores Duran</strong><span style="display:block;font-size:.73rem;color:rgba(245,237,216,.5);">Elegância urbana feminina nos anos 1950</span></div>
+      <div class="ref-entry" style="padding:4px 0;border-bottom:.5px solid rgba(196,147,63,.1);"><strong style="font-size:.8rem;color:var(--cream);">Christian Dior — New Look</strong><span style="display:block;font-size:.73rem;color:rgba(245,237,216,.5);">musee-dior-granville.com — silhuetas dos anos 1950</span></div>
+      <div class="ref-entry" style="padding:4px 0;"><strong style="font-size:.8rem;color:var(--cream);">Vintage Fashion Guild</strong><span style="display:block;font-size:.73rem;color:rgba(245,237,216,.5);">vintagefashionguild.org — identificação de peças por década</span></div>
     </div>
   </div>
- 
-  <div class="finale-btns">
-    <button class="finale-btn secondary" onclick="document.getElementById('s1').scrollIntoView({behavior:'smooth'})">↑ Voltar ao início</button>
-    <button class="finale-btn primary" onclick="document.getElementById('s1').scrollIntoView({behavior:'smooth'})">Recomeçar apresentação</button>
-  </div>
- 
-  <div class="finale-signature">
-    Rádio Aurora · Figurinismo · Brasil, anos 1950<br>
-    Lucas Kovaleski · Mariana Ribeiro · Jenny Balotin · Maria Clara · Victor Eduardo
+  <!-- Botões + assinatura compactos -->
+  <div style="flex-shrink:0;border-top:.5px solid rgba(196,147,63,.15);padding:.8rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;">
+    <div class="finale-signature" style="border:none;padding:0;font-size:.82rem;text-align:left;">
+      Rádio Aurora · Figurinismo · Brasil, anos 1950<br>
+      <span style="font-size:.75rem;">Lucas Kovaleski · Mariana Ribeiro · Jenny Balotin · Maria Clara · Victor Eduardo</span>
+    </div>
+    <div class="finale-btns" style="padding:0;flex-shrink:0;gap:10px;">
+      <button class="finale-btn secondary" onclick="document.getElementById('s1').scrollIntoView({behavior:'smooth'})">↑ Início</button>
+      <button class="finale-btn primary" onclick="document.getElementById('s1').scrollIntoView({behavior:'smooth'})">Recomeçar</button>
+    </div>
   </div>
 </section>
  
 <script>
-// ─── NAV DOTS
-const sections = ['s1','s2','s3','s4','s5','s6','s7'];
-const dots = document.querySelectorAll('.nav-dot');
- 
-function scrollTo(x,id){document.getElementById(id).scrollIntoView({behavior:'smooth'})}
- 
+// ═══════════════════════════════════════════
+// SLIDE ENGINE — limpo e funcional
+// ═══════════════════════════════════════════
+const container  = document.getElementById('slide-container');
+const overlay    = document.getElementById('transition-overlay');
+const labelBox   = document.getElementById('slide-label');
+const labelEye   = document.getElementById('slide-label-eyebrow');
+const labelTit   = document.getElementById('slide-label-title');
+const charInd    = document.getElementById('char-indicator');
+const progressBar= document.getElementById('progress');
+
+// Ordem dos slides principais
+const SLIDE_IDS = ['s1','s2','s2b','s3','s4','s5','s6','s6b','s7'];
+const SLIDE_INFO = {
+  s1: { eyebrow:'Abertura',        title:'Rádio Aurora'           },
+  s2: { eyebrow:'Introdução',      title:'Contexto da Época'      },
+  s2b:{ eyebrow:'Etapa 2',      title:'Referências Visuais'    },
+  s3: { eyebrow:'Etapa 3',         title:'Painel Cinematográfico' },
+  s4: { eyebrow:'Etapa 4',         title:'Fichas de Figurino'     },
+  s5: { eyebrow:'Etapa 5',         title:'Comparativo'            },
+  s6: { eyebrow:'Etapa 6',         title:'Produção — Celina & Orlando' },
+  s6b:{ eyebrow:'Etapa 6',         title:'Produção — Nair & Júlio'},
+  s7: { eyebrow:'Referências',     title:'Fontes Consultadas'     },
+};
+const CHARS = ['celina','orlando','nair','julio'];
+const CHAR_INFO = {
+  celina:  { eyebrow:'Personagem 01', title:'Celina'  },
+  orlando: { eyebrow:'Personagem 02', title:'Orlando' },
+  nair:    { eyebrow:'Personagem 03', title:'Nair'    },
+  julio:   { eyebrow:'Personagem 04', title:'Júlio'   },
+};
+
+let curSlide   = 0;   // índice em SLIDE_IDS
+let curChar    = 0;   // índice em CHARS (só relevante quando curSlide===3)
+let transitioning = false;
+
+// ── Helpers ──────────────────────────────
+function slideEl(idx){ return document.getElementById(SLIDE_IDS[idx]); }
+
+function goToSlideEl(el){
+  container.scrollTop = el.offsetTop;
+}
+
+function updateProgress(){
+  const max = container.scrollHeight - container.clientHeight;
+  progressBar.style.width = (max > 0 ? container.scrollTop/max*100 : 0)+'%';
+}
+
 function updateDots(){
-  const scrollY = window.scrollY + window.innerHeight/2;
-  sections.forEach((id,i)=>{
-    const el = document.getElementById(id);
-    if(!el) return;
-    const top = el.offsetTop;
-    const bot = top + el.offsetHeight;
-    if(scrollY >= top && scrollY < bot){
-      dots.forEach(d=>d.classList.remove('active'));
-      dots[i].classList.add('active');
-    }
+  document.querySelectorAll('.nav-dot').forEach((d,i)=>{
+    d.classList.toggle('active', i === curSlide);
   });
 }
- 
-// ─── PROGRESS BAR
-function updateProgress(){
-  const h = document.body.scrollHeight - window.innerHeight;
-  const p = h>0 ? (window.scrollY/h*100) : 0;
-  document.getElementById('progress').style.width = p+'%';
+
+function updateCharIndicator(){
+  const inS4 = (SLIDE_IDS[curSlide] === 's4');
+  charInd.classList.toggle('visible', inS4);
+  document.querySelectorAll('.char-ind-dot').forEach((d,i)=>{
+    d.classList.toggle('active', i === curChar);
+  });
 }
- 
-// ─── REVEAL ON SCROLL
-const reveals = document.querySelectorAll('.reveal');
-const observer = new IntersectionObserver((entries)=>{
+
+// ── Transição de cortina ─────────────────
+function runTransition(info, onMidpoint){
+  transitioning = true;
+  labelEye.textContent = info.eyebrow;
+  labelTit.textContent = info.title;
+
+  // fecha cortina
+  overlay.classList.add('closing');
+  setTimeout(()=>{ labelBox.classList.add('visible'); }, 180);
+
+  setTimeout(()=>{
+    onMidpoint();
+    updateProgress();
+  }, 400);
+
+  // abre cortina
+  setTimeout(()=>{
+    labelBox.classList.remove('visible');
+    overlay.classList.remove('closing');
+    overlay.classList.add('opening-start');
+    requestAnimationFrame(()=> requestAnimationFrame(()=>{
+      overlay.classList.add('opening');
+      overlay.classList.remove('opening-start');
+    }));
+    setTimeout(()=>{
+      overlay.classList.remove('opening');
+      transitioning = false;
+    }, 500);
+  }, 1600);
+}
+
+// ── Mudança de personagem dentro do s4 ───
+function showChar(name, btn){
+  // chamado pelos botões da tab-nav
+  const idx = CHARS.indexOf(name);
+  if(idx < 0) return;
+  curChar = idx;
+  document.querySelectorAll('.char-panel').forEach(p=> p.classList.remove('active'));
+  document.querySelectorAll('.char-tab-btn').forEach(b=> b.classList.remove('active'));
+  document.getElementById('cp-'+name).classList.add('active');
+  if(btn) btn.classList.add('active');
+  updateCharIndicator();
+}
+
+function jumpToChar(idx){
+  const name = CHARS[idx];
+  const btn  = document.querySelector(`.char-tab-btn[data-name="${name.charAt(0).toUpperCase()+name.slice(1)}"]`)
+            || document.querySelector(`.char-tab-btn[onclick*="${name}"]`);
+  runTransition(CHAR_INFO[name], ()=>{
+    showChar(name, btn);
+  });
+}
+
+// ── Navegação principal ──────────────────
+function navigate(direction){
+  // direction: +1 avança, -1 recua
+  if(transitioning) return;
+
+  // Dentro do s4: scroll entre personagens antes de sair
+  if(SLIDE_IDS[curSlide] === 's4'){
+    const nextChar = curChar + direction;
+    if(nextChar >= 0 && nextChar < CHARS.length){
+      jumpToChar(nextChar);
+      return;
+    }
+    // esgotou os personagens → sai do s4
+  }
+
+  const nextSlide = curSlide + direction;
+  if(nextSlide < 0 || nextSlide >= SLIDE_IDS.length) return;
+
+  const id   = SLIDE_IDS[nextSlide];
+  const info = SLIDE_INFO[id];
+
+  runTransition(info, ()=>{
+    curSlide = nextSlide;
+    // ao entrar em s4, reseta para primeiro personagem
+    if(id === 's4'){
+      curChar = direction > 0 ? 0 : CHARS.length-1;
+      showChar(CHARS[curChar], null);
+    }
+    goToSlideEl(slideEl(curSlide));
+    updateDots();
+    updateCharIndicator();
+    revealVisible();
+  });
+}
+
+// ── Eventos ──────────────────────────────
+// Wheel
+let wheelAcc = 0, wheelTimer = null;
+container.addEventListener('wheel', e=>{
+  e.preventDefault();
+  if(transitioning) return;
+  wheelAcc += e.deltaY;
+  clearTimeout(wheelTimer);
+  wheelTimer = setTimeout(()=>{ wheelAcc=0; }, 250);
+  if(Math.abs(wheelAcc) > 50){
+    const dir = wheelAcc > 0 ? 1 : -1;
+    wheelAcc = 0;
+    navigate(dir);
+  }
+},{ passive:false });
+
+// Teclado
+window.addEventListener('keydown', e=>{
+  if(transitioning) return;
+  if(['ArrowDown','PageDown','Space'].includes(e.code)){ e.preventDefault(); navigate(1); }
+  if(['ArrowUp','PageUp'].includes(e.code))            { e.preventDefault(); navigate(-1); }
+});
+
+// Touch
+let touchY = 0;
+container.addEventListener('touchstart', e=>{ touchY = e.touches[0].clientY; },{passive:true});
+container.addEventListener('touchend',   e=>{
+  if(transitioning) return;
+  const dy = touchY - e.changedTouches[0].clientY;
+  if(Math.abs(dy) > 40) navigate(dy > 0 ? 1 : -1);
+},{passive:true});
+
+// Nav dots
+function scrollTo(x, id){
+  if(transitioning) return;
+  const idx = SLIDE_IDS.indexOf(id);
+  if(idx < 0) return;
+  const info = SLIDE_INFO[id];
+  runTransition(info, ()=>{
+    curSlide = idx;
+    if(id==='s4'){ curChar=0; showChar(CHARS[0],null); }
+    goToSlideEl(slideEl(curSlide));
+    updateDots();
+    updateCharIndicator();
+    revealVisible();
+  });
+}
+
+// Char indicator dots
+document.querySelectorAll('.char-ind-dot').forEach((d,i)=>{
+  d.addEventListener('click', ()=> jumpToChar(i));
+});
+
+// Impede o scroll nativo do container de disparar snap indesejado
+container.addEventListener('scroll', ()=>{ updateProgress(); },{ passive:true });
+
+// ── Reveal ───────────────────────────────
+const revObs = new IntersectionObserver(entries=>{
   entries.forEach(e=>{
     if(e.isIntersecting){
-      e.target.classList.add('visible');
-      // stagger siblings
       const siblings = [...e.target.parentElement.querySelectorAll('.reveal')];
-      const idx = siblings.indexOf(e.target);
-      e.target.style.transitionDelay = (idx * 0.1)+'s';
+      e.target.style.transitionDelay = (siblings.indexOf(e.target)*0.1)+'s';
+      e.target.classList.add('visible');
     }
   });
-},{threshold:0.15});
-reveals.forEach(r=>observer.observe(r));
- 
-// ─── CHARACTER TABS
-function showChar(name, btn){
-  document.querySelectorAll('.char-panel').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.char-tab-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('cp-'+name).classList.add('active');
-  btn.classList.add('active');
+},{ root:container, threshold:0.1 });
+
+function revealVisible(){
+  document.querySelectorAll('.reveal').forEach(r=> revObs.observe(r));
 }
- 
-// ─── SCROLL EVENTS
-window.addEventListener('scroll',()=>{
-  updateDots();
-  updateProgress();
-},{passive:true});
+
+// ── Init ─────────────────────────────────
+// Garante que começa no s1 e scroll-snap não pule
+container.scrollTop = 0;
+curSlide = 0;
+// Inicializa s4 mostrando Celina
+showChar('celina', document.querySelector('.char-tab-btn'));
 updateDots();
+updateCharIndicator();
 updateProgress();
+revealVisible();
+
+// Hint
+setTimeout(()=>{ document.getElementById('nav-hint').classList.add('visible'); }, 3000);
+setTimeout(()=>{ document.getElementById('nav-hint').classList.remove('visible'); }, 6500);
 </script>
 </body>
 </html>
