@@ -554,9 +554,8 @@ body::before{
 }
 .char-img-placeholder{
   border:1px dashed rgba(196,147,63,.3);
-  aspect-ratio:2/3;max-width:320px;width:100%;
-  display:flex;flex-direction:column;align-items:center;
-  justify-content:center;gap:12px;padding:2rem;text-align:center;
+  width:40%; height: 65%;
+  position:relative;overflow:hidden;
 }
 .char-img-placeholder-icon{
   width:64px;height:64px;
@@ -650,11 +649,19 @@ body::before{
   padding:2rem 1.5rem;text-align:center;
 }
 .comp-avatar{
-  width:70px;height:70px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  font-family:'Playfair Display',serif;
-  font-size:2rem;font-weight:700;
+  width:130px;height:130px;border-radius:50%;
   margin:0 auto 1rem;
+  overflow:hidden;
+  border:2px solid rgba(196,147,63,.4);
+  flex-shrink:0;
+}
+.comp-avatar img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
+  transform:scale(2.0);
+  transform-origin:var(--ox, 50%) var(--oy, 20%);
 }
 .comp-char-name{
   font-family:'Playfair Display',serif;
@@ -868,7 +875,7 @@ body::before{
 ══════════════════════════════════════ -->
 <section class="section" id="s2" style="background:var(--cream);color:var(--text)">
   <div class="section-header reveal">
-    <span class="section-eyebrow">Etapa 2</span>
+    <span class="section-eyebrow">Introdução</span>
     <h2 class="section-title-big">Contexto da <em>época</em></h2>
     <p class="section-lead">O Brasil dos anos 1950: rádio como centro da cultura de massa, elegância urbana influenciada pelo cinema e por Paris, e uma sociedade dividida entre a tradição e a modernização acelerada.</p>
   </div>
@@ -927,32 +934,47 @@ body::before{
   <!-- Galeria de fotos de época -->
   <div class="photo-showcase">
     <div class="photo-showcase-title">Referências visuais da época</div>
-    <div class="photo-showcase-sub">Substitua os espaços abaixo pelas fotos de pesquisa do grupo</div>
+    <div class="photo-showcase-sub">Revistas, roupas, acessórios e fotografia</div>
     <div class="photo-grid">
       <div class="photo-slot reveal">
+        <img src="helena2.webp" alt="Helena de Lima, cantora de rádio dos anos 1950">
         <div class="photo-placeholder"><div class="photo-placeholder-icon">📷</div><div class="photo-placeholder-label">Cantora de rádio<br>anos 1950 — BR</div></div>
-        <div class="photo-overlay"><div class="photo-overlay-text">Cantoras de auditório</div><div class="photo-overlay-source">Acervo Rádio Nacional</div></div>
+        <div class="photo-overlay"><div class="photo-overlay-text">Helena de Lima</div><div class="photo-overlay-source">Correio Paulistano, 1951</div></div>
       </div>
       <div class="photo-slot reveal">
+        <img src="revista_da_semana_rj.jpg" alt="Vestido de cetim, moda brasileira dos anos 1950">
         <div class="photo-placeholder"><div class="photo-placeholder-icon">📷</div><div class="photo-placeholder-label">Vestido de cetim<br>moda brasileira 1950</div></div>
-        <div class="photo-overlay"><div class="photo-overlay-text">Moda feminina</div><div class="photo-overlay-source">Revista O Cruzeiro, 1954</div></div>
+        <div class="photo-overlay">
+          <div class="photo-overlay-text">Moda feminina</div>
+          <div class="photo-overlay-source">Revista da Semana, 1950</div>
+        </div>
       </div>
       <div class="photo-slot reveal">
+        <img src="terno_masculino.jpg" alt="Terno masculino, moda brasileira dos anos 1950">
         <div class="photo-placeholder"><div class="photo-placeholder-icon">📷</div><div class="photo-placeholder-label">Terno masculino<br>locutor / apresentador</div></div>
-        <div class="photo-overlay"><div class="photo-overlay-text">Traje masculino</div><div class="photo-overlay-source">Arquivo Nacional</div></div>
+        <div class="photo-overlay"><div class="photo-overlay-text">Trajes masculino</div><div class="photo-overlay-source">Revista da Semana, 1953</div></div>
       </div>
       <div class="photo-slot reveal">
+        <img src="radio.jpeg" alt="Interior de estúdio de rádio dos anos 1950" style="object-position: 85% center;">
         <div class="photo-placeholder"><div class="photo-placeholder-icon">📷</div><div class="photo-placeholder-label">Interior de estúdio<br>de rádio anos 1950</div></div>
-        <div class="photo-overlay"><div class="photo-overlay-text">Estúdio de rádio</div><div class="photo-overlay-source">Acervo Rádio Nacional / Arquivo Nacional</div></div>
+        <div class="photo-overlay"><div class="photo-overlay-text">Estúdio de rádio</div><div class="photo-overlay-source">Acervo UH</div></div>
       </div>
       <div class="photo-slot reveal">
-        <div class="photo-placeholder"><div class="photo-placeholder-icon">📷</div><div class="photo-placeholder-label">Emilinha Borba<br>ou Marlene</div></div>
-        <div class="photo-overlay"><div class="photo-overlay-text">Referência de glamour</div><div class="photo-overlay-source">Revista Manchete, 1955</div></div>
+        <img src="marlene.jpeg" alt="Marlene, cantoras de rádio dos anos 1950" style="object-position: 50% 40%;">
+        <div class="photo-placeholder"><div class="photo-placeholder-icon">📷</div><div class="photo-placeholder-label">Marlene</div></div>
+        <div class="photo-overlay"><div class="photo-overlay-text">Referência de glamour</div><div class="photo-overlay-source">Revista Manchete, 1952</div></div>
       </div>
       <div class="photo-slot reveal">
-        <div class="photo-placeholder"><div class="photo-placeholder-icon">📷</div><div class="photo-placeholder-label">Moda jovem urbana<br>São Paulo / Rio 1950</div></div>
-        <div class="photo-overlay"><div class="photo-overlay-text">Juventude urbana</div><div class="photo-overlay-source">Acervo Folha de S.Paulo</div></div>
+        <img src="revista da semana.jpg" alt="Revista da Semana, 1953" style="object-position: 10% center;">
+        <div class="photo-placeholder"><div class="photo-placeholder-icon">📷</div><div class="photo-placeholder-label">Revista</div></div>
+        <div class="photo-overlay"><div class="photo-overlay-text">Moda</div><div class="photo-overlay-source">Revista da Semana, 1953</div></div>
       </div>
+      <div class="photo-slot reveal">
+        <img src="machete-1955.webp" alt="Capa da revista Manchete, 1955" style="object-position: 50% 40%;">
+        <div class="photo-placeholder"><div class="photo-placeholder-icon">📷</div><div class="photo-placeholder-label">Machete, 1955</div></div>
+        <div class="photo-overlay"><div class="photo-overlay-text">Capa da revista</div><div class="photo-overlay-source">Revista Manchete, 1955</div></div>
+      </div>
+      
     </div>
   </div>
 
@@ -971,8 +993,7 @@ body::before{
         </div>
         <div class="class-photo-area" style="background:#E8D5C0;height:220px">
           <div class="class-photo-placeholder">
-            <div class="class-placeholder-icon">👗</div>
-            <div class="class-placeholder-text">Adicione foto:<br>Elegância aristocrática<br>Anos 1950 Brasil</div>
+           <img src="dior.avif" alt="Ensaio New Look Dior, 1950s">
           </div>
         </div>
         <div class="class-card-body">
@@ -996,8 +1017,8 @@ body::before{
         </div>
         <div class="class-photo-area" style="background:#D0D8E8;height:220px">
           <div class="class-photo-placeholder">
-            <div class="class-placeholder-icon">🕴️</div>
-            <div class="class-placeholder-text">Adicione foto:<br>Moda urbana classe média<br>Anos 1950 Brasil</div>
+            
+            <img src="otelo.jpg" alt="Grande Otelo e Oscarito, atores de rádio dos anos 1950" style="object-position: 50% 40%;">
           </div>
         </div>
         <div class="class-card-body">
@@ -1021,8 +1042,7 @@ body::before{
         </div>
         <div class="class-photo-area" style="background:#C8D8D0;height:220px">
           <div class="class-photo-placeholder">
-            <div class="class-placeholder-icon">🔧</div>
-            <div class="class-placeholder-text">Adicione foto:<br>Trabalhadores / técnicos<br>Anos 1950 Brasil</div>
+            <img src="rio-40-graus.jpg" alt="Cena do filme Rio, 40 Graus, 1955" style="object-position: 90% center;">
           </div>
         </div>
         <div class="class-card-body">
@@ -1049,8 +1069,8 @@ body::before{
 <section class="section" id="s3" style="background:#1a1208;padding:5rem 2rem 4rem">
   <div class="mood-header">
     <span class="section-eyebrow">Etapa 3</span>
-    <h2 class="mood-title">Painel <em style="color:var(--gold)">Semântico</em></h2>
-    <div class="mood-sub">Passe o mouse sobre cada imagem para ver a referência</div>
+    <h2 class="mood-title">Painel <em style="color:var(--gold)">Cinematográfico</em></h2>
+    <div class="mood-sub">Referências audiovisuais brasileiras dos anos 1950</div>
   </div>
 
   <!-- Moodboard estilo polaroids sobrepostos -->
@@ -1058,50 +1078,50 @@ body::before{
     <div style="display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:auto auto;gap:16px">
 
       <div class="photo-slot reveal" style="aspect-ratio:3/4;transform:rotate(-2.5deg);border:4px solid rgba(245,237,216,.15)">
-        <div class="photo-placeholder" style="background:#2A1F0F"><div class="photo-placeholder-icon">📷</div><div class="photo-placeholder-label" style="color:rgba(196,147,63,.4)">Emilinha Borba<br>Rádio Nacional</div></div>
+        <img src="sinha.jpg" >
         <div class="photo-overlay">
-          <div class="photo-overlay-text">Cantoras de auditório</div>
-          <div class="photo-overlay-source">Revista O Cruzeiro, 1953</div>
+          <div class="photo-overlay-text">Sinhá Moça</div>
+          <div class="photo-overlay-source">1953</div>
         </div>
       </div>
 
       <div class="photo-slot reveal" style="aspect-ratio:3/4;transform:rotate(1.8deg);border:4px solid rgba(245,237,216,.15)">
-        <div class="photo-placeholder" style="background:#1A2438"><div class="photo-placeholder-icon">📷</div><div class="photo-placeholder-label" style="color:rgba(196,147,63,.4)">Estúdio Rádio<br>anos 1950</div></div>
+        <img src="absolutamente-certo.jpg" style="object-position: 78% center;">
         <div class="photo-overlay">
-          <div class="photo-overlay-text">Interior de estúdio</div>
-          <div class="photo-overlay-source">Arquivo Nacional BR</div>
+          <div class="photo-overlay-text">Absolutamente Certo</div>
+          <div class="photo-overlay-source">1957</div>
         </div>
       </div>
 
       <div class="photo-slot reveal" style="aspect-ratio:3/4;transform:rotate(-1.2deg);border:4px solid rgba(245,237,216,.15)">
-        <div class="photo-placeholder" style="background:#2A1820"><div class="photo-placeholder-icon">📷</div><div class="photo-placeholder-label" style="color:rgba(196,147,63,.4)">New Look Dior<br>adaptado Brasil</div></div>
+        <img src="amar-foi.jpg" style="object-position: 35% center;">
         <div class="photo-overlay">
-          <div class="photo-overlay-text">Moda feminina 1950</div>
-          <div class="photo-overlay-source">Museu Christian Dior / Manchete</div>
+          <div class="photo-overlay-text">Amar Foi Minha Ruína</div>
+          <div class="photo-overlay-source">1945</div>
         </div>
       </div>
 
       <div class="photo-slot reveal" style="aspect-ratio:3/4;transform:rotate(2.3deg);border:4px solid rgba(245,237,216,.15)">
-        <div class="photo-placeholder" style="background:#1E2A18"><div class="photo-placeholder-icon">📷</div><div class="photo-placeholder-label" style="color:rgba(196,147,63,.4)">Terno masculino<br>elegante anos 1950</div></div>
+        <img src="tico.jpg">
         <div class="photo-overlay">
-          <div class="photo-overlay-text">Moda masculina</div>
-          <div class="photo-overlay-source">Revista O Cruzeiro, 1955</div>
+          <div class="photo-overlay-text">Tico tico no fubá</div>
+          <div class="photo-overlay-source">1952</div>
         </div>
       </div>
 
       <div class="photo-slot reveal" style="aspect-ratio:4/3;grid-column:1/3;transform:rotate(-.8deg);border:4px solid rgba(245,237,216,.15)">
-        <div class="photo-placeholder" style="background:#241A10"><div class="photo-placeholder-icon">📷</div><div class="photo-placeholder-label" style="color:rgba(196,147,63,.4)">Programa de auditório<br>Rádio Nacional anos 1950</div></div>
+        <img src="rio.jpg">
         <div class="photo-overlay">
-          <div class="photo-overlay-text">Programa de auditório</div>
-          <div class="photo-overlay-source">Hemeroteca Digital BN</div>
+          <div class="photo-overlay-text">Rio 40 Graus</div>
+          <div class="photo-overlay-source">1955</div>
         </div>
       </div>
 
       <div class="photo-slot reveal" style="aspect-ratio:4/3;grid-column:3/5;transform:rotate(1.1deg);border:4px solid rgba(245,237,216,.15)">
-        <div class="photo-placeholder" style="background:#1A2030"><div class="photo-placeholder-icon">📷</div><div class="photo-placeholder-label" style="color:rgba(196,147,63,.4)">Cinema brasileiro<br>Rio 40 Graus / 1955</div></div>
-        <div class="photo-overlay">
-          <div class="photo-overlay-text">Cinema nacional da época</div>
-          <div class="photo-overlay-source">Rio 40 Graus, Nelson Pereira dos Santos</div>
+       <img src="otelo2.jpg">
+       <div class="photo-overlay">
+          <div class="photo-overlay-text">Grande Otelo e Oscarito nas chanchadas</div>
+          <div class="photo-overlay-source">1949</div>
         </div>
       </div>
 
@@ -1189,8 +1209,8 @@ body::before{
     <div class="char-right" style="background:linear-gradient(135deg,#1A0810 0%,#2A1020 100%)">
       <div class="char-img-area">
         <div class="char-img-placeholder" style="border-color:rgba(194,83,106,.4)">
-          <div class="char-img-placeholder-icon" style="border-color:rgba(194,83,106,.4);color:rgba(194,83,106,.5)">👗</div>
-          <p style="color:rgba(194,83,106,.5)">Imagem gerada por IA<br>será inserida aqui<br><br>Corpo inteiro · Fundo neutro<br>Estudo de figurino para cinema</p>
+          <img src="celina.png" alt="Celina, figurino de auditório anos 1950"
+       style="width:100%;height:100%;object-fit:cover;object-position:center top;display:block;">
         </div>
         <div class="char-img-label">Celina · Figurino de auditório · Brasil 1950</div>
       </div>
@@ -1242,8 +1262,8 @@ body::before{
     <div class="char-right" style="background:linear-gradient(135deg,#080F1C 0%,#1A2030 100%)">
       <div class="char-img-area">
         <div class="char-img-placeholder" style="border-color:rgba(100,130,200,.4)">
-          <div class="char-img-placeholder-icon" style="border-color:rgba(100,130,200,.4);color:rgba(100,130,200,.5)">🎙️</div>
-          <p style="color:rgba(100,130,200,.5)">Imagem gerada por IA<br>será inserida aqui<br><br>Corpo inteiro · Fundo neutro<br>Estudo de figurino para cinema</p>
+          <img src="orlando.png" alt="Orlando, figurino de locutor anos 1950"
+       style="width:100%;height:100%;object-fit:cover;object-position:center top;display:block;">
         </div>
         <div class="char-img-label">Orlando · Terno de locutor · Brasil 1950</div>
       </div>
@@ -1295,8 +1315,8 @@ body::before{
     <div class="char-right" style="background:linear-gradient(135deg,#081414 0%,#1A2020 100%)">
       <div class="char-img-area">
         <div class="char-img-placeholder" style="border-color:rgba(43,107,107,.5)">
-          <div class="char-img-placeholder-icon" style="border-color:rgba(43,107,107,.5);color:rgba(43,107,107,.6)">🎛️</div>
-          <p style="color:rgba(43,107,107,.6)">Imagem gerada por IA<br>será inserida aqui<br><br>Corpo inteiro · Fundo neutro<br>Estudo de figurino para cinema</p>
+         <img src="nair.png" alt="Nair, figurino de sonoplasta anos 1950"
+       style="width:100%;height:100%;object-fit:cover;object-position:center top;display:block;">  
         </div>
         <div class="char-img-label">Nair · Figurino técnico de bastidores · Brasil 1950</div>
       </div>
@@ -1348,8 +1368,8 @@ body::before{
     <div class="char-right" style="background:linear-gradient(135deg,#140806 0%,#201810 100%)">
       <div class="char-img-area">
         <div class="char-img-placeholder" style="border-color:rgba(139,58,42,.5)">
-          <div class="char-img-placeholder-icon" style="border-color:rgba(139,58,42,.5);color:rgba(139,58,42,.6)">✏️</div>
-          <p style="color:rgba(139,58,42,.6)">Imagem gerada por IA<br>será inserida aqui<br><br>Corpo inteiro · Fundo neutro<br>Estudo de figurino para cinema</p>
+          <img src="julio.png" alt="Júlio, figurino de redator jovem urbano anos 1950"
+       style="width:100%;height:100%;object-fit:cover;object-position:center top;display:block;"> 
         </div>
         <div class="char-img-label">Júlio · Figurino jovem urbano · Brasil 1950</div>
       </div>
@@ -1369,11 +1389,13 @@ body::before{
     <h2 class="section-title-big" style="color:var(--cream)">Comparativo dos <em style="color:var(--gold)">personagens</em></h2>
     <p class="section-lead" style="color:rgba(245,237,216,.6)">Como os quatro figurinos se diferenciam visual e narrativamente</p>
   </div>
-
+ 
   <div class="comp-four">
     <div class="comp-char-card reveal" style="background:linear-gradient(to bottom,#3D0E17,#1A2744)">
       <div class="comp-card-top">
-        <div class="comp-avatar" style="background:var(--bordeaux);color:var(--cream)">C</div>
+        <div class="comp-avatar" style="border-color:rgba(196,147,63,.5);">
+  <img src="retrato-celina.png" alt="Celina" style="--ox:55%;--oy:10%;">
+</div>
         <div class="comp-char-name" style="color:var(--cream)">Celina</div>
         <div class="comp-char-fn" style="color:rgba(245,237,216,.6)">Cantora · Palco</div>
         <div class="comp-swatches">
@@ -1387,7 +1409,9 @@ body::before{
     </div>
     <div class="comp-char-card reveal" style="background:linear-gradient(to bottom,#0D1830,#233560)">
       <div class="comp-card-top">
-        <div class="comp-avatar" style="background:var(--navy-mid);color:var(--cream)">O</div>
+        <div class="comp-avatar" style="border-color:rgba(100,130,200,.5);">
+  <img src="retrato-osvaldo.png" alt="Orlando" style="--ox:52.5%;--oy:6%;">
+</div>
         <div class="comp-char-name" style="color:var(--cream)">Orlando</div>
         <div class="comp-char-fn" style="color:rgba(245,237,216,.6)">Locutor · Bastidores</div>
         <div class="comp-swatches">
@@ -1401,7 +1425,9 @@ body::before{
     </div>
     <div class="comp-char-card reveal" style="background:linear-gradient(to bottom,#0A1F1F,#1A2744)">
       <div class="comp-card-top">
-        <div class="comp-avatar" style="background:var(--teal);color:var(--cream)">N</div>
+        <div class="comp-avatar" style="border-color:rgba(43,107,107,.6);">
+  <img src="nair.png" alt="Nair" style="--ox:50%;--oy:6%; scale: 3.6;">
+</div>
         <div class="comp-char-name" style="color:var(--cream)">Nair</div>
         <div class="comp-char-fn" style="color:rgba(245,237,216,.6)">Técnica · Bastidores</div>
         <div class="comp-swatches">
@@ -1415,7 +1441,9 @@ body::before{
     </div>
     <div class="comp-char-card reveal" style="background:linear-gradient(to bottom,#200C08,#1A1510)">
       <div class="comp-card-top">
-        <div class="comp-avatar" style="background:var(--rust);color:var(--cream)">J</div>
+        <div class="comp-avatar" style="border-color:rgba(139,58,42,.6);">
+  <img src="julio.png" alt="Júlio"  style="--ox:48%;--oy:5%; scale: 3.6;">
+</div>
         <div class="comp-char-name" style="color:var(--cream)">Júlio</div>
         <div class="comp-char-fn" style="color:rgba(245,237,216,.6)">Redator · Recém-chegado</div>
         <div class="comp-swatches">
@@ -1428,7 +1456,7 @@ body::before{
       </div>
     </div>
   </div>
-
+ 
   <div class="comp-table-wrap reveal">
     <table class="comp-table">
       <thead>
@@ -1452,10 +1480,10 @@ body::before{
     </table>
   </div>
 </section>
-
+ 
 <!-- Transição 5→6 -->
 <div style="height:80px;background:linear-gradient(to bottom right,var(--navy-dark) 49.5%,var(--cream) 50%)"></div>
-
+ 
 <!-- ══════════════════════════════════════
      S6 — PRODUÇÃO
 ══════════════════════════════════════ -->
@@ -1465,7 +1493,7 @@ body::before{
     <h2 class="section-title-big">Planejamento de <em style="color:var(--bordeaux)">produção</em></h2>
     <p class="section-lead">Soluções práticas para montar os figurinos com recursos limitados</p>
   </div>
-
+ 
   <div class="prod-four">
     <div class="prod-card reveal">
       <div class="prod-card-header" style="background:var(--bordeaux)">
@@ -1479,7 +1507,7 @@ body::before{
         <div class="prod-cat"><span class="prod-badge nota">Continuidade</span><div class="prod-items">Fotografar posição exata do broche e luvas antes de cada tomada</div></div>
       </div>
     </div>
-
+ 
     <div class="prod-card reveal">
       <div class="prod-card-header" style="background:var(--navy)">
         <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:white;flex-shrink:0">O</div>
@@ -1492,7 +1520,7 @@ body::before{
         <div class="prod-cat"><span class="prod-badge nota">Dificuldade</span><div class="prod-items">Lapela do terno deve ser estreita — evitar anos 1970. Verificar antes da compra.</div></div>
       </div>
     </div>
-
+ 
     <div class="prod-card reveal">
       <div class="prod-card-header" style="background:var(--teal)">
         <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:white;flex-shrink:0">N</div>
@@ -1505,7 +1533,7 @@ body::before{
         <div class="prod-cat"><span class="prod-badge nota">Ponto forte</span><div class="prod-items">Figurino mais fácil de manter em continuidade — sem adornos que se perdem entre tomadas</div></div>
       </div>
     </div>
-
+ 
     <div class="prod-card reveal">
       <div class="prod-card-header" style="background:var(--rust)">
         <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:white;flex-shrink:0">J</div>
@@ -1519,16 +1547,16 @@ body::before{
       </div>
     </div>
   </div>
-
+ 
   <div class="ia-warning reveal">
     <strong>⚠ Erros comuns das imagens geradas por IA — o que corrigir:</strong><br>
     A IA pode inserir: lapela larga dos anos 1970, tênis ou calçados modernos, maquiagem dos anos 1980 (delineador exagerado), volume de cabelo estilo anos 80, tecidos sintéticos brilhosos de décadas posteriores, ou penteados com babyliss. Caso ocorra, use o prompt de refinamento especificando Brasil 1950–1958 e citando referências como Emilinha Borba, Marlene ou atores do cinema nacional da época.
   </div>
 </section>
-
+ 
 <!-- Transição 6→7 -->
 <div style="height:80px;background:linear-gradient(to bottom right,var(--cream) 49.5%,var(--navy) 50%)"></div>
-
+ 
 <!-- ══════════════════════════════════════
      S7 — REFERÊNCIAS
 ══════════════════════════════════════ -->
@@ -1537,56 +1565,56 @@ body::before{
     <span class="section-eyebrow">Referências</span>
     <h2 class="section-title-big" style="color:var(--cream)">Fontes <em style="color:var(--gold)">consultadas</em></h2>
   </div>
-
+ 
   <div class="refs-cols">
     <div class="refs-group reveal">
       <h3>Cinema e audiovisual</h3>
       <div class="ref-entry"><strong>Absolutamente Certo! (1957)</strong><span>Dir. Anselmo Duarte — moda de estúdio de rádio paulistana</span></div>
       <div class="ref-entry"><strong>Rio 40 Graus (1955)</strong><span>Dir. Nelson Pereira dos Santos — cotidiano carioca, classes populares</span></div>
       <div class="ref-entry"><strong>Amar foi minha ruína (1954)</strong><span>Melodrama nacional — figurinos femininos de época</span></div>
-      <div class="ref-entry"><strong>É com esse que eu vou (1958)</strong><span>Chanchadas da Atlântida — moda masculina popular</span></div>
+      <div class="ref-entry"><strong>Grande Otelo e Oscarito nas chanchadas (1958)</strong><span>Chanchadas da Atlântida — moda masculina popular</span></div>
     </div>
     <div class="refs-group reveal">
       <h3>Acervos digitais</h3>
-      <div class="ref-entry"><strong>Arquivo Nacional — Rádio Nacional</strong><span>hemeroteca.bn.gov.br — fotos de estúdio, cantoras e locutores</span></div>
-      <div class="ref-entry"><strong>Acervo Folha de S.Paulo</strong><span>acervo.folha.com.br — fotografias de moda e vida urbana</span></div>
-      <div class="ref-entry"><strong>IBGE Memória</strong><span>memoria.ibge.gov.br — fotografias urbanas dos anos 1950</span></div>
-      <div class="ref-entry"><strong>Museu da Moda (MUMA) — Curitiba</strong><span>Acervo digital de peças brasileiras da década de 1950</span></div>
+      <div class="ref-entry"><strong>Museu da Imagem e do Som do Paraná</strong><span>www.mis.pr.gov.br/Pagina/Acervo-Fotografico-e-Documental </span></div>
+      <div class="ref-entry"><strong>Memórias Cinematográficas</strong><span>www.memoriascinematograficas.com.br </span></div>
+      <div class="ref-entry"><strong>Museu Paulista da Universidade de São Paulo</strong><span>http://acervo.mp.usp.br/Home.html </span></div>
+      
     </div>
     <div class="refs-group reveal">
       <h3>Revistas e imprensa</h3>
       <div class="ref-entry"><strong>Revista O Cruzeiro (1950–1958)</strong><span>Hemeroteca Digital BN — moda, publicidade, celebridades</span></div>
       <div class="ref-entry"><strong>Revista Manchete (1952–1958)</strong><span>Fotojornalismo e vida social carioca</span></div>
-      <div class="ref-entry"><strong>Revista A Cigarra</strong><span>Moda feminina, anúncios de tecidos</span></div>
-      <div class="ref-entry"><strong>Revista Capricho (1952–1958)</strong><span>Editora Abril — moda jovem brasileira</span></div>
+      <div class="ref-entry"><strong>Revista da Semana (1950-1955) </strong><span>Moda, fotojornalistmo, anúncios e noticías</span></div>
+
     </div>
     <div class="refs-group reveal">
       <h3>Personalidades e moda</h3>
       <div class="ref-entry"><strong>Emilinha Borba</strong><span>Cantora da Rádio Nacional — referência de glamour e figurino de auditório</span></div>
       <div class="ref-entry"><strong>Marlene &amp; Dolores Duran</strong><span>Elegância urbana feminina nos anos 1950</span></div>
       <div class="ref-entry"><strong>Christian Dior — New Look</strong><span>musee-dior-granville.com — silhuetas dos anos 1950</span></div>
-      <div class="ref-entry"><strong>Vintage Fashion Guild</strong><span>vintagefashionguild.org — identificação de peças por década</span></div>
+     
     </div>
   </div>
-
+ 
   <div class="finale-btns">
     <button class="finale-btn secondary" onclick="document.getElementById('s1').scrollIntoView({behavior:'smooth'})">↑ Voltar ao início</button>
     <button class="finale-btn primary" onclick="document.getElementById('s1').scrollIntoView({behavior:'smooth'})">Recomeçar apresentação</button>
   </div>
-
+ 
   <div class="finale-signature">
     Rádio Aurora · Figurinismo · Brasil, anos 1950<br>
     Lucas Kovaleski · Mariana Ribeiro · Jenny Balotin · Maria Clara · Victor Eduardo
   </div>
 </section>
-
+ 
 <script>
 // ─── NAV DOTS
 const sections = ['s1','s2','s3','s4','s5','s6','s7'];
 const dots = document.querySelectorAll('.nav-dot');
-
+ 
 function scrollTo(x,id){document.getElementById(id).scrollIntoView({behavior:'smooth'})}
-
+ 
 function updateDots(){
   const scrollY = window.scrollY + window.innerHeight/2;
   sections.forEach((id,i)=>{
@@ -1600,14 +1628,14 @@ function updateDots(){
     }
   });
 }
-
+ 
 // ─── PROGRESS BAR
 function updateProgress(){
   const h = document.body.scrollHeight - window.innerHeight;
   const p = h>0 ? (window.scrollY/h*100) : 0;
   document.getElementById('progress').style.width = p+'%';
 }
-
+ 
 // ─── REVEAL ON SCROLL
 const reveals = document.querySelectorAll('.reveal');
 const observer = new IntersectionObserver((entries)=>{
@@ -1622,7 +1650,7 @@ const observer = new IntersectionObserver((entries)=>{
   });
 },{threshold:0.15});
 reveals.forEach(r=>observer.observe(r));
-
+ 
 // ─── CHARACTER TABS
 function showChar(name, btn){
   document.querySelectorAll('.char-panel').forEach(p=>p.classList.remove('active'));
@@ -1630,7 +1658,7 @@ function showChar(name, btn){
   document.getElementById('cp-'+name).classList.add('active');
   btn.classList.add('active');
 }
-
+ 
 // ─── SCROLL EVENTS
 window.addEventListener('scroll',()=>{
   updateDots();
